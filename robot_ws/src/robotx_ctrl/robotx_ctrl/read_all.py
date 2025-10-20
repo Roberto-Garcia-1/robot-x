@@ -5,13 +5,13 @@ from rclpy.qos import QoSProfile, ReliabilityPolicy,  HistoryPolicy
 from std_msgs.msg import String
 from robotx_interfaces.msg import RobotFrame
 
-from .Arm_Lib.Arm_Lib_Mod import Arm_Device
+from Arm_Lib.Arm_Lib_Mod import Arm_Device
 
 class ReadAll(Node):
     def __init__(self, node_name):
         super().__init__(node_name)
-        self._arm_drv = Arm_Device()
-        self._arm_drv.Arm_serial_set_torque(0)
+        #self._arm_drv = Arm_Device()
+        #self._arm_drv.Arm_serial_set_torque(0)
 
         self._qos_profile = QoSProfile(
             reliability=ReliabilityPolicy.BEST_EFFORT,
@@ -24,6 +24,7 @@ class ReadAll(Node):
 
     def timer_callback(self):
         msg = RobotFrame()
+        self.publisher.publish(msg)
         msg.th1 = self._arm_drv.Arm_serial_servo_read(1)
         msg.th2 = self._arm_drv.Arm_serial_servo_read(2)
         msg.th3 = self._arm_drv.Arm_serial_servo_read(3)

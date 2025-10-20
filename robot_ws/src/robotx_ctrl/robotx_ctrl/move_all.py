@@ -7,7 +7,7 @@ from rclpy.qos import QoSProfile, ReliabilityPolicy,  HistoryPolicy
 from std_msgs.msg import String
 from robotx_interfaces.msg import RobotFrame
 
-from Arm_Lib.Arm_Lib_Mod import Arm_Device
+from .Arm_Lib.Arm_Lib_Mod import Arm_Device
 
 class MoveAll(Node):
     def __init__(self, node_name):
