@@ -16,14 +16,14 @@ robot_model = RobotModel()
 
 print("Opening database")
 # --- Open rosbag ---
-bag_path=os.path.expanduser("~/ROS2Dev/ros2bag/model_database")
+bag_path=os.path.expanduser("rosbags/rosbag_2025-10-22_23-41-16")
 # --- Crear base SQLite de salida ---
-db_path = os.path.expanduser("~/ROS2Dev/ros2bag/model_database.db")
+db_path = os.path.expanduser("rosbags/model_database.db")
 conn = sqlite3.connect(db_path)
 # Carpeta para imagenes
 os.makedirs("imagenes", exist_ok=True)
 cursor = conn.cursor()
-cursor.execute("CREATE TABLE IF NOT EXISTS data (task INTEGER, try INTEGER, id INTEGER, t REAL, x REAL, y REAL, z REAL, gamma REAL, beta REAL, alpha REAL, gripper REAL)")
+cursor.execute("CREATE TABLE IF NOT EXISTS data (task INTEGER, try INTEGER, id INTEGER, t REAL, x REAL, y REAL, z REAL, gamma REAL, beta REAL, alpha REAL, gripper REAL, success INTEGER)")
 #cursor.execute("CREATE TABLE IF NOT EXISTS imagenes (t_ns INTEGER, timestamp_text TEXT, data BLOB)")
 img_count = 0
 
@@ -47,7 +47,7 @@ while reader.has_next():
     print("creating data: " + str(t))
     print(msg)
     x, y, z, bet, gam, al = robot_model.direct_kinematics(msg.th1, msg.th2, msg.th3, msg.th4)
-    cursor.execute("INSERT INTO data VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", (1, 1, count, count * 0.1, x, y, z, bet, gam, al, msg.g1))
+    cursor.execute("INSERT INTO data VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", (1, 1, count, count * 0.1, x, y, z, bet, gam, al, msg.g1, 1))
     count += 1
   elif topic == "/camera/image_raw":
     print("image found")

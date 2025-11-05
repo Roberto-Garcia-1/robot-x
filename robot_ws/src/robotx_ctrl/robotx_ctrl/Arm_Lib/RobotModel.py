@@ -1,17 +1,18 @@
-from sympy import *
+
+from sympy import symbols, pi, Matrix, cos, sin, lambdify, asin
 import math
 
 
 class RobotModel():
 
   def __init__(self):
-    z_O_1 = 0.105
+    z_0_1 = 0.105
     L1 = 0.084
     L2 = 0.084
     L3 = 0.115
     theta_1, theta_2, theta_3, theta_4 = symbols('theta_1, theta_2, theta_3, theta_4')
-    T_0_1 = self.trans_homo_xz(0, z_O_1, 0, theta_1)
-    T_1_2 = self.trans_homo_xz(0, 0, pi/2, theta_2)
+    T_0_1 = self.trans_homo_xz(0, z_0_1, 0, theta_1)
+    T_1_2 = self.trans_homo_xz(0, 0, -pi/2, theta_2 - pi/2)
     T_2_3 = self.trans_homo_xz(L1, 0, 0, theta_3)
     T_3_4 = self.trans_homo_xz(L2, 0, 0, theta_4)
     T_4_p = self.trans_homo_xz(L3, 0, -pi/2, 0)
