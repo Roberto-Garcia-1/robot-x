@@ -15,14 +15,14 @@ class ReadAll(Node):
         self._qos_profile = QoSProfile(
             reliability=ReliabilityPolicy.BEST_EFFORT,
             history=HistoryPolicy.KEEP_LAST,
-            depth=1
+            depth=10
         )
         self.robot_model = RobotModel()
-        self.publisher = self.create_publisher(RobotFrame, '/robot_frame', 10)
+        self.publisher = self.create_publisher(RobotFrame, '/robot_frame', self._qos_profile)
         # Start sequence
         self._arm_drv.Arm_serial_set_torque(0)
         self._arm_drv.Arm_RGB_set(0, 50, 0)
-        self._arm_drv.Arm_Buzzer_On(1)
+        #self._arm_drv.Arm_Buzzer_On(1)
 
         self.timer = self.create_timer(0.1, self.timer_callback)
 
@@ -38,7 +38,7 @@ class ReadAll(Node):
         
         print("th1: {:.4f}, th2: {:.4f}, th3: {:.4f}, th4: {:.4f}, th5: {:.4f}, g1: {:.4f}".format(msg.th1, msg.th2, msg.th3, msg.th4, msg.th5, msg.g1))
         x, y, z, gam, bet, al = self.robot_model.direct_kinematics(msg.th1, msg.th2, msg.th3, msg.th4)
-        print("x: {:.4f}, y: {:.4f}, z: {:.4f}, alpha: {:.4f}, beta: {:.4f}, gamma: {:.4f}".format(x, y, z, degrees(gam), degrees(bet), degrees(al)))
+        #print("x: {:.4f}, y: {:.4f}, z: {:.4f}, alpha: {:.4f}, beta: {:.4f}, gamma: {:.4f}".format(x, y, z, degrees(gam), degrees(bet), degrees(al)))
         self.publisher.publish(msg)
         
 def init_node(args=None):

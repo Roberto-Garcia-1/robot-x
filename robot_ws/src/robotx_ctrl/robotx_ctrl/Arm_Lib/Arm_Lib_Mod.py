@@ -6,12 +6,12 @@ from math import pi
 from time import sleep
 from typing import List
 # V0.0.5
-OFFSET_1 = - pi / 2.0
-OFFSET_2 = - pi / 2.0
-OFFSET_3 = - pi / 2.0
-OFFSET_4 = - pi / 2.0
-OFFSET_5 = - pi / 2.0
-OFFSET_6 = - pi / 2.0
+OFFSET_1 = 0
+OFFSET_2 = 100
+OFFSET_3 = -50
+OFFSET_4 = 20
+OFFSET_5 = 80
+OFFSET_6 = 0
 class Arm_Device(object):
     """DOFBOT Arm controller"""
     def __init__(self):
@@ -160,30 +160,30 @@ class Arm_Device(object):
             print("The parameter input range is not within 0-pi")     # print("参数传入范围不在0-180之内！")
             return
         try:
-            pos = int((3100 - 900) * (s1 - OFFSET_1) / (pi - 0) + 900)
+            pos = int((3100 - 900) * (s1 + pi/2.0) / (pi - 0) + 900) + OFFSET_1
             value1_H = (pos >> 8) & 0xFF
             value1_L = pos & 0xFF
             
             #s2 = pi - s2
-            pos = int((3100 - 900) * (s2 - OFFSET_2) / (pi - 0) + 900)
+            pos = int((3100 - 900) * (s2 + pi/2.0) / (pi - 0) + 900) + OFFSET_2
             value2_H = (pos >> 8) & 0xFF
             value2_L = pos & 0xFF
 
             #s3 = pi - s3
-            pos = int((3100 - 900) * (s3 - OFFSET_3) / (pi - 0) + 900)
+            pos = int((3100 - 900) * (s3 + pi/2.0) / (pi - 0) + 900) + OFFSET_3
             value3_H = (pos >> 8) & 0xFF
             value3_L = pos & 0xFF
 
             #s4 = pi - s4
-            pos = int((3100 - 900) * (s4 - OFFSET_4) / (pi - 0) + 900)
+            pos = int((3100 - 900) * (s4 + pi/2.0) / (pi - 0) + 900) + OFFSET_4
             value4_H = (pos >> 8) & 0xFF
             value4_L = pos & 0xFF
 
-            pos = int((3700 - 380) * (s5 - OFFSET_5) / (pi*(3/2.0) - 0) + 380)
+            pos = int((3700 - 380) * (s5 + pi/2.0) / (pi*(3/2.0) - 0) + 380) + OFFSET_5
             value5_H = (pos >> 8) & 0xFF
             value5_L = pos & 0xFF
 
-            pos = int((3000 - 1060) * s6 + 1060) # int((3100 - 900) * (s6 - 0) / (pi - 0) + 900)
+            pos = int((3000 - 1060) * s6 + 1060 + OFFSET_6)  # int((3100 - 900) * (s6 - 0) / (pi - 0) + 900)
             value6_H = (pos >> 8) & 0xFF
             value6_L = pos & 0xFF
             time_H = (time >> 8) & 0xFF
@@ -217,30 +217,30 @@ class Arm_Device(object):
             print("The parameter input range is not within 0-pi")     # print("参数传入范围不在0-180之内！")
             return"""
         try:
-            pos = int((3100 - 900) * (s1 - OFFSET_1) / (pi - 0) + 900)
+            pos = int((3100 - 900) * (s1 + pi/2.0) / (pi - 0) + 900)
             value1_H = (pos >> 8) & 0xFF
             value1_L = pos & 0xFF
             
             #s2 = pi - s2
-            pos = int((3100 - 900) * (s2 - OFFSET_2) / (pi - 0) + 900)
+            pos = int((3100 - 900) * (s2 + pi/2.0) / (pi - 0) + 900)
             value2_H = (pos >> 8) & 0xFF
             value2_L = pos & 0xFF
 
             #s3 = pi - s3
-            pos = int((3100 - 900) * (s3 - OFFSET_3) / (pi - 0) + 900)
+            pos = int((3100 - 900) * (s3 + pi/2.0) / (pi - 0) + 900)
             value3_H = (pos >> 8) & 0xFF
             value3_L = pos & 0xFF
 
             #s4 = pi - s4
-            pos = int((3100 - 900) * (s4 - OFFSET_4) / (pi - 0) + 900)
+            pos = int((3100 - 900) * (s4 + pi/2.0) / (pi - 0) + 900)
             value4_H = (pos >> 8) & 0xFF
             value4_L = pos & 0xFF
 
-            pos = int((3700 - 380) * (s5 - OFFSET_5) / (pi*(3/2.0) - 0) + 380)
+            pos = int((3700 - 380) * (s5 + pi/2.0) / (pi*(3/2.0) - 0) + 380)
             value5_H = (pos >> 8) & 0xFF
             value5_L = pos & 0xFF
 
-            pos = int((3000 - 1060) * s6 + 1060) # int((3100 - 900) * (s6 - 0) / (pi - 0) + 900)
+            pos = int((3000 - 1060) * s6 + 1060 + OFFSET_6) # int((3100 - 900) * (s6 - 0) / (pi - 0) + 900)
             value6_H = (pos >> 8) & 0xFF
             value6_L = pos & 0xFF
             time_H = (time >> 8) & 0xFF
@@ -279,7 +279,7 @@ class Arm_Device(object):
         pos = (pos >> 8 & 0xff) | (pos << 8 & 0xff00)
         # print(pos)
         if id == 5:
-            pos = (pi*(3/2.0) - 0) * (pos - 380.0) / (3700 - 380) + OFFSET_5
+            pos = (pi*(3/2.0) - 0) * (pos - 380.0) / (3700 - 380) - pi/2.0
             if pos > pi*(1/2.0):
                 return float(pi*(1/2.0))
             if pos < -pi*(1/2.0):
@@ -292,9 +292,9 @@ class Arm_Device(object):
             if pos > 1.0:
                 return 1.0
             elif pos < 0:
-                return 0 
+                return 0.0
         elif id == 1:
-            pos = (float(pi) - 0) * (pos - 900) / (3100 - 900) + OFFSET_1  
+            pos = (float(pi) - 0) * (pos - 900) / (3100 - 900) - pi/2.0  
             if pos > pi*(1/2.0):
                 return float(pi*(1/2.0))
             elif pos < -pi*(1/2.0):
@@ -302,7 +302,7 @@ class Arm_Device(object):
             #if pos > pi or pos < 0:
             #    return None
         elif id == 2 or id == 3 or id == 4:
-            pos = (float(pi) - 0) * (pos - 900) / (3100 - 900) + OFFSET_2
+            pos = (float(pi) - 0) * (pos - 900) / (3100 - 900) - pi/2.0
             #print(pos)
             #pos = pi - pos
             if pos > pi*(1/2.0):

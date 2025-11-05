@@ -21,12 +21,12 @@ class MoveAll(Node):
         # Start sequence
         self._arm_drv.Arm_serial_set_torque(1)
         self._arm_drv.Arm_RGB_set(50, 0, 50)
-        self._arm_drv.Arm_Buzzer_On(1)
-        sleep(0.5)
-        self._arm_drv.Arm_Buzzer_On(1)
+        #self._arm_drv.Arm_Buzzer_On(1)
+        #sleep(0.5)
+        #self._arm_drv.Arm_Buzzer_On(1)
         self._arm_drv.Arm_serial_servo_write6_array((radians(0), radians(0),
                                                      radians(0), radians(0),
-                                                     radians(0), 0), 1000)
+                                                     radians(0), 0), 100)
         self.subscriber=self.create_subscription(RobotFrame, '/robot_frame', self.frame_callback, 10)
 
     def frame_callback(self, msg:RobotFrame):
