@@ -5,13 +5,16 @@ import sys
 
 import rclpy
 from rclpy.node import Node
+from rclpy.qos import QoSProfile, ReliabilityPolicy,  HistoryPolicy
 from rclpy.serialization import serialize_message
 from sensor_msgs.msg import Image, CompressedImage
 from robotx_interfaces.msg import RobotFrame 
 from rosbag2_py import SequentialWriter, StorageOptions, ConverterOptions, TopicMetadata
 from datetime import datetime
 import threading
-from pynput import keyboard
+from inputimeout import inputimeout, TimeoutOccurred
+from std_msgs.msg import Bool, Int32
+from ament_index_python import get_package_share_directory
 import time
 import shutil
 import termios
@@ -20,10 +23,11 @@ class BagRecorder(Node):
   def __init__(self):
     super().__init__('bag_recorder')
     # Suscripciones
+    self._qos_profile = QoSProfile(reliability=ReliabilityPolicy.BEST_EFFORT,history=HistoryPolicy.KEEP_LAST, depth=1)
     self.image_msg = None
     self.robot_frame_msg = None
-    self.create_subscription(Image, '/camera/image_raw', self.image_callback, 10)
-    self.create_subscription(RobotFrame, '/robot_frame', self.robot_frame_callback, 10)
+    self.create_subscription(Image, '/camera/image_raw', self.image_callback, self._qos_profile)
+    self.create_subscription(RobotFrame, '/mirror/robot_frame', self.robot_frame_callback, self._qos_profile)
 
     # Estado
     self.recording = False
@@ -31,13 +35,13 @@ class BagRecorder(Node):
     self.last_folder = None
 
     self.timer = self.create_timer(0.1, self.record_messages)
-
-    # Hilos
-    """self.keyboard_thread = threading.Thread(target=self.start_keyboard_listener, daemon=True)
-    self.keyboard_thread.start()"""
-
+    self.timer_key = self.create_timer(0.1, self.key_verif)
+    
     self.get_logger().info("Nodo iniciado. [Espacio]=Iniciar/detener grabación, [x]=Borrar última carpeta.")
-
+    # ROS2Bag
+    self.folder_prefix = get_package_share_directory("robotx_ctrl")+"/../../../../tmp/"
+    self.task = 1
+    self.attempt = 1
   # --- Callbacks de tópicos ---
   def image_callback(self, msg):
     self.image_msg = msg
@@ -46,40 +50,31 @@ class BagRecorder(Node):
     self.robot_frame_msg = msg
 
   # --- Control con teclado ---
-  def start_keyboard_listener(self):
-    def on_press(key):
-      try:
-        if key == keyboard.Key.space:
-          self.toggle_recording()
-        elif hasattr(key, 'char') and key.char == 'x':
-          self.delete_last_folder()
-      except AttributeError:
-        print(f'Special key pressed: {key}')
-
-    listener = keyboard.Listener(on_press=on_press)
-    listener.start()
-
-
-  def get_key(self, settings):
-    tty.setraw(sys.stdin.fileno())
-    rlist, _, _ = select.select([sys.stdin], [], [], 0.1)
-    if rlist:
+  def key_verif(self):
+    key = None
+    if sys.stdin in select.select([sys.stdin], [], [], 0)[0]:
       key = sys.stdin.read(1)
-    else:
-      key = ''
-    termios.tcsetattr(sys.stdin, termios.TCSADRAIN, settings)
-    return key
-  
+
+    if key == " ":
+      self.start_recording()
+    elif key == 's':
+      self.stop_recording_success()
+    elif key == 'f':
+      self.stop_recording_failure()
+    elif key == 'x':
+      self.delete_last_folder()
+    #self.timer_key.reset()
+
+
 
   # --- Grabación ---
-  def toggle_recording(self):
+  def start_recording(self):
     if not self.recording:
-      timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-      folder_name = f"rosbags/rosbag_{timestamp}"
+      timestamp = datetime.now().strftime("%m-%d_%H-%M-%S")
+      print(timestamp)
+      folder_name = self.folder_prefix + f"rosbag_{timestamp}"
       #os.makedirs(folder_name, exist_ok=True)
       self.last_folder = folder_name
-
-      
       
       self.writer = SequentialWriter()
       storage_options = StorageOptions(
@@ -88,25 +83,130 @@ class BagRecorder(Node):
       )
       converter_options = ConverterOptions('', '')
       self.writer.open(storage_options, converter_options)
-      
-      """self.writer.create_topic({
-        'name': '/camera/image_raw',
-        'type': 'sensor_msgs/msg/Image',
-        'serialization_format': 'cdr'
-      })
-      self.writer.create_topic({
-        'name': '/robot_frame',
-        'type': 'your_package_name/msg/RobotFrame',  # cambia aquí
-        'serialization_format': 'cdr'
-      })"""
 
       topic_info = TopicMetadata(
       name='/camera/image_raw',
       type='sensor_msgs/msg/Image',
       serialization_format='cdr')
       self.writer.create_topic(topic_info)
+
       topic_info = TopicMetadata(
-      name='/robot_frame',
+      name='/mirror/robot_frame',
+      type='RobotFrame/msg/RobotFrame',
+      serialization_format='cdr')
+      self.writer.create_topic(topic_info)
+
+      topic_info = TopicMetadata(
+      name='/mirror/robot_frame/success',
+      type='std_msgs/msg/Bool',
+      serialization_format='cdr')
+      self.writer.create_topic(topic_info)
+
+      topic_info = TopicMetadata(
+      name='/mirror/robot_frame/task',
+      type='std_msgs/msg/Int32',
+      serialization_format='cdr')
+      self.writer.create_topic(topic_info)
+
+      topic_info = TopicMetadata(
+      name='/mirror/robot_frame/attempt',
+      type='std_msgs/msg/Int32',
+      serialization_format='cdr')
+      self.writer.create_topic(topic_info)
+
+      self.recording = True
+      self.get_logger().info(f"Grabando a 10Hz en carpeta: {folder_name}")
+    else:
+      self.get_logger().info("Opción inválida.")
+
+  def stop_recording_success(self):
+    if not self.recording:
+      self.get_logger().info("Opción inválida.")
+    else:
+      self.recording = False
+      timestamp = int(self.get_clock().now().nanoseconds)
+      res = Bool()
+      res.data = True
+      attempt = Int32()
+      attempt.data = self.attempt
+      self.attempt+=1
+      task = Int32()
+      task.data = self.task
+      self.writer.write(
+        '/mirror/robot_frame/success',
+        serialize_message(res),
+        timestamp
+      )
+      self.writer.write(
+        '/mirror/robot_frame/attempt',
+        serialize_message(attempt),
+        timestamp
+      )
+      self.writer.write(
+        '/mirror/robot_frame/task',
+        serialize_message(task),
+        timestamp
+      )
+      self.writer = None
+      self.get_logger().info("Grabación guardada como acierto. Presiona [Espacio] para iniciar otra o [x] para eliminar la última carpeta.")
+  
+  def stop_recording_failure(self):
+    if not self.recording:
+      self.get_logger().info("Opción inválida.")
+    else:
+      self.recording = False
+      res = Bool()
+      res.data = False
+      timestamp = int(self.get_clock().now().nanoseconds)
+      res = Bool()
+      res.data = False
+      attempt = Int32()
+      attempt.data = self.attempt
+      self.attempt+=1
+      task = Int32()
+      task.data = self.task
+      self.writer.write(
+        '/mirror/robot_frame/success',
+        serialize_message(res),
+        timestamp
+      )
+      self.writer.write(
+        '/mirror/robot_frame/attempt',
+        serialize_message(attempt),
+        timestamp
+      )
+      self.writer.write(
+        '/mirror/robot_frame/task',
+        serialize_message(task),
+        timestamp
+      )
+      self.writer = None
+      self.get_logger().info("Grabación guardada como fallo. Presiona [Espacio] para iniciar otra o [x] para eliminar la última carpeta.")
+  
+  def toggle_recording(self):
+    if not self.recording:
+      timestamp = datetime.now().strftime("%m-%d_%H-%M-%S")
+      print(timestamp)
+      folder_name = self.folder_prefix + f"rosbag_{timestamp}"
+      #os.makedirs(folder_name, exist_ok=True)
+      self.last_folder = folder_name
+      
+      self.writer = SequentialWriter()
+      storage_options = StorageOptions(
+        uri=folder_name,
+        storage_id='sqlite3'
+      )
+      converter_options = ConverterOptions('', '')
+      self.writer.open(storage_options, converter_options)
+
+      topic_info = TopicMetadata(
+      name='/camera/image_raw',
+      type='sensor_msgs/msg/Image',
+      serialization_format='cdr')
+      self.writer.create_topic(topic_info)
+
+      topic_info = TopicMetadata(
+      name='/mirror/robot_frame',
       type='RobotFrame/msg/RobotFrame',
       serialization_format='cdr')
       self.writer.create_topic(topic_info)
@@ -121,16 +221,8 @@ class BagRecorder(Node):
   def record_messages(self):
     """Se ejecuta a 10Hz"""
     #Verifica teclado
-    key = self.get_key(termios.tcgetattr(sys.stdin))
-    if key == " ":
-      self.toggle_recording()
-    elif key == 'x':
-      self.delete_last_folder()
-
     if not self.recording or self.writer is None:
       return
-
-    now = self.get_clock().now().to_msg()
     timestamp = int(self.get_clock().now().nanoseconds)
 
     if self.image_msg is not None:
@@ -142,7 +234,7 @@ class BagRecorder(Node):
 
     if self.robot_frame_msg is not None:
       self.writer.write(
-        '/robot_frame',
+        '/mirror/robot_frame',
         serialize_message(self.robot_frame_msg),
         timestamp
       )

@@ -5,7 +5,7 @@ import time
 from math import pi
 from time import sleep
 from typing import List
-# V0.0.5
+# V0.1
 OFFSET_1 = 0
 OFFSET_2 = 100
 OFFSET_3 = -50

@@ -6,9 +6,9 @@ from rclpy.node import Node
 from rclpy.qos import QoSProfile, ReliabilityPolicy,  HistoryPolicy
 from std_msgs.msg import String
 from robotx_interfaces.msg import RobotFrame
-from math import degrees
+from sensor_msgs.msg import JointState
+
 from Arm_Lib.Arm_Lib_Mod import Arm_Device
-from Arm_Lib.RobotModel import RobotModel
 
 class MoveAll(Node):
     def __init__(self, node_name):
@@ -25,21 +25,27 @@ class MoveAll(Node):
         self._arm_drv.Arm_Buzzer_On(1)
         sleep(0.5)
         self._arm_drv.Arm_Buzzer_On(1)
-        """self._arm_drv.Arm_serial_servo_write6_array((radians(0), radians(0),
+        self._arm_drv.Arm_serial_servo_write6_array((radians(0), radians(0),
                                                      radians(0), radians(0),
-                                                     radians(0), 0), 100)"""
-        self.robot_model = RobotModel()
-        self.target_position = RobotFrame()
-        self.publisher=self.create_publisher(RobotFrame, '/mirror/robot_frame', self._qos_profile)
-        self.subscriber=self.create_subscription(RobotFrame, '/robot_frame', self.frame_callback, self._qos_profile)
+                                                     radians(0), 0), 20)
+        #self.subscriber=self.create_subscription(RobotFrame, '/dummy/robot_frame', self.frame_callback, self._qos_profile)
+        #self.publisher=self.create_publisher(RobotFrame, '/mirror/robot_frame', self._qos_profile)
+        self.subscriber=self.create_subscription(JointState, '/dummy/robot_frame', self.frame_callback, self._qos_profile)
+        #self.target_position = RobotFrame()
+        self.target_position = JointState()
         self.timer = self.create_timer(0.1, self.timer_callback)
 
     def frame_callback(self, msg:RobotFrame):
+        print(msg)
         self.target_position = msg
-        self._arm_drv.Arm_serial_servo_write6_array((msg.th1, msg.th2, 
-                                                     msg.th3, msg.th4, 
-                                                     msg.th5, msg.g1), 5)
+        """self._arm_drv.Arm_serial_servo_write6_array((int(msg.th1), int(msg.th2), 
+                                                     int(msg.th3), int(msg.th4), 
+                                                     int(msg.th5), int(msg.g1)), 5)"""
     def timer_callback(self):
+        self._arm_drv.Arm_serial_servo_write6_array((int(self.target_position.position[0]), int(self.target_position.position[1]), 
+                                                     int(self.target_position.position[2]), int(self.target_position.position[3]), 
+                                                     int(self.target_position.position[4]), int(self.target_position.position[5])), 5)
+
         msg = RobotFrame()
         msg.th1 = self._arm_drv.Arm_serial_servo_read(1)
         msg.th2 = self._arm_drv.Arm_serial_servo_read(2)
@@ -48,10 +54,7 @@ class MoveAll(Node):
         msg.th5 = self._arm_drv.Arm_serial_servo_read(5)
         msg.g1  = self._arm_drv.Arm_serial_servo_read(6)
         
-        print("th1: {:.4f}, th2: {:.4f}, th3: {:.4f}, th4: {:.4f}, th5: {:.4f}, g1: {:.4f}".format(msg.th1, msg.th2, msg.th3, msg.th4, msg.th5, msg.g1))
-        x, y, z, gam, bet, al = self.robot_model.direct_kinematics(msg.th1, msg.th2, msg.th3, msg.th4)
-        print("x: {:.4f}, y: {:.4f}, z: {:.4f}, alpha: {:.4f}, beta: {:.4f}, gamma: {:.4f}".format(x, y, z, degrees(gam), degrees(bet), degrees(al)))
-        self.publisher.publish(msg)
+
 def init_node(args=None):
     try:
         rclpy.init(args=args)

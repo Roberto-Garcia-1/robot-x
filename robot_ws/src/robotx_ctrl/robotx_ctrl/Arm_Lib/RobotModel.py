@@ -15,7 +15,7 @@ class RobotModel():
     T_1_2 = self.trans_homo_xz(0, 0, -pi/2, theta_2 - pi/2)
     T_2_3 = self.trans_homo_xz(L1, 0, 0, theta_3)
     T_3_4 = self.trans_homo_xz(L2, 0, 0, theta_4)
-    T_4_p = self.trans_homo_xz(L3, 0, -pi/2, 0)
+    T_4_p = self.trans_homo_xz(L3, 0, pi/2, 0)
 
     T_0_p = T_0_1 * T_1_2 * T_2_3 * T_3_4 * T_4_p
     self.T_0_p_lam = lambdify([theta_1, theta_2, theta_3, theta_4], T_0_p)
