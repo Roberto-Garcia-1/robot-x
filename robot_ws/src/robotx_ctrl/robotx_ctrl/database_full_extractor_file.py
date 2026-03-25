@@ -29,7 +29,7 @@ image_folder = folder_prefix + "database_img"
 os.makedirs(image_folder, exist_ok=True)"""
 cursor = conn.cursor()
 cursor.execute("CREATE TABLE IF NOT EXISTS data (task INTEGER, try INTEGER, id INTEGER, t REAL, x REAL, y REAL, z REAL, gamma REAL, beta REAL, alpha REAL, gripper REAL, success INTEGER)")
-cursor.execute("CREATE TABLE IF NOT EXISTS imagenes (t_ns INTEGER, timestamp_text TEXT, data BLOB)")
+cursor.execute("CREATE TABLE IF NOT EXISTS imagenes (t_ns INTEGER, timestamp_text TEXT, path TEXT)")
 conn.commit()
 
 # --- Procesar cada rosbag ---
@@ -74,7 +74,6 @@ for rosbag_file in rosbag_dirs:
       cursor.execute("INSERT INTO data VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", (task, attempt, count, count * 0.1, x, y, z, gam, bet, al, msg.g1, success))
       count += 1
     elif topic == "/camera/image_raw":
-      print("image found")
       msg = deserialize_message(data, Image)
 
       # Convertir a imagen OpenCV con cv_bridge
@@ -83,10 +82,9 @@ for rosbag_file in rosbag_dirs:
       # Redimensionar a 640x480
       resized = cv2.resize(cv_image, (640, 480))
 
-      # Guardar como BLOB
-      success_enc, buffer = cv2.imencode(".jpg", resized)
-        if success_enc:
-          img_blob = buffer.tobytes()
-          cursor.execute("INSERT INTO imagenes VALUES (?, ?, ?)", (t, timestamp_text, img_blob))
+      # Guardar como archivo JPG
+      filename = image_folder + f"/img_{img_count:05d}.jpg"
+      cv2.imwrite(filename, resized)
+      cursor.execute("INSERT INTO imagenes VALUES (?, ?, ?)",(t, timestamp_text, filename))
   conn.commit()
 conn.close()

@@ -19,6 +19,7 @@ import time
 import shutil
 import termios
 import tty
+from pynput import keyboard
 class BagRecorder(Node):
   def __init__(self):
     super().__init__('bag_recorder')
@@ -35,13 +36,16 @@ class BagRecorder(Node):
     self.last_folder = None
 
     self.timer = self.create_timer(0.1, self.record_messages)
-    self.timer_key = self.create_timer(0.1, self.key_verif)
     
-    self.get_logger().info("Nodo iniciado. [Espacio]=Iniciar/detener grabación, [x]=Borrar última carpeta.")
+    self.get_logger().info("Nodo iniciado. \n[Espacio]:Iniciar/detener grabación \n[x]:Borrar última carpeta \n[t]:Cambiar tarea actual")
     # ROS2Bag
-    self.folder_prefix = get_package_share_directory("robotx_ctrl")+"/../../../../tmp/"
+    self.folder_prefix = os.path.expanduser("~/robotx_rosbag/")
     self.task = 1
     self.attempt = 1
+    # Hilos para el teclado
+    self.keyboard_thread = threading.Thread(target=self.start_keyboard_listener, daemon=True)
+    self.keyboard_thread.start()
+
   # --- Callbacks de tópicos ---
   def image_callback(self, msg):
     self.image_msg = msg
@@ -50,29 +54,36 @@ class BagRecorder(Node):
     self.robot_frame_msg = msg
 
   # --- Control con teclado ---
-  def key_verif(self):
-    key = None
-    if sys.stdin in select.select([sys.stdin], [], [], 0)[0]:
-      key = sys.stdin.read(1)
+  def start_keyboard_listener(self):
+    def on_press(key):
+      try:
+        if key == keyboard.Key.space:
+          self.toggle_recording()
+        elif hasattr(key, 'char') and key.char == 's':
+          self.stop_recording_success()
+        elif hasattr(key, 'char') and key.char == 'f':
+          self.stop_recording_failure()
+        elif hasattr(key, 'char') and key.char == 'x':
+          self.delete_last_folder()
+        elif hasattr(key, 'char') and key.char == 't':
+          self.change_task()
+        elif key == keyboard.Key.esc:
+          print("Exit")
+          sys.exit()
+      except AttributeError:
+        print(f'Special key pressed: {key}')
 
-    if key == " ":
-      self.start_recording()
-    elif key == 's':
-      self.stop_recording_success()
-    elif key == 'f':
-      self.stop_recording_failure()
-    elif key == 'x':
-      self.delete_last_folder()
-    #self.timer_key.reset()
+    listener = keyboard.Listener(on_press=on_press)
+    listener.start()
 
 
 
   # --- Grabación ---
   def start_recording(self):
     if not self.recording:
-      timestamp = datetime.now().strftime("%m-%d_%H-%M-%S")
+      timestamp = datetime.now().strftime("%d-%m_%H-%M-%S")
       print(timestamp)
-      folder_name = self.folder_prefix + f"rosbag_{timestamp}"
+      folder_name = self.folder_prefix + f"task{self.task:02}-{self.attempt:05}" + f"rosbag_{timestamp}"
       #os.makedirs(folder_name, exist_ok=True)
       self.last_folder = folder_name
       
@@ -148,6 +159,7 @@ class BagRecorder(Node):
         timestamp
       )
       self.writer = None
+      self.rename_last_folder('s')
       self.get_logger().info("Grabación guardada como acierto. Presiona [Espacio] para iniciar otra o [x] para eliminar la última carpeta.")
   
   def stop_recording_failure(self):
@@ -181,13 +193,14 @@ class BagRecorder(Node):
         timestamp
       )
       self.writer = None
+      self.rename_last_folder('f')
       self.get_logger().info("Grabación guardada como fallo. Presiona [Espacio] para iniciar otra o [x] para eliminar la última carpeta.")
   
   def toggle_recording(self):
     if not self.recording:
-      timestamp = datetime.now().strftime("%m-%d_%H-%M-%S")
+      timestamp = datetime.now().strftime("%d-%m_%H-%M-%S")
       print(timestamp)
-      folder_name = self.folder_prefix + f"rosbag_{timestamp}"
+      self.attempt, folder_name = self.get_next_attempt()
       #os.makedirs(folder_name, exist_ok=True)
       self.last_folder = folder_name
       
@@ -211,12 +224,45 @@ class BagRecorder(Node):
       serialization_format='cdr')
       self.writer.create_topic(topic_info)
 
+      topic_info = TopicMetadata(
+      name='/mirror/robot_frame/success',
+      type='std_msgs/msg/Bool',
+      serialization_format='cdr')
+      self.writer.create_topic(topic_info)
+
+      topic_info = TopicMetadata(
+      name='/mirror/robot_frame/task',
+      type='std_msgs/msg/Int32',
+      serialization_format='cdr')
+      self.writer.create_topic(topic_info)
+
+      topic_info = TopicMetadata(
+      name='/mirror/robot_frame/attempt',
+      type='std_msgs/msg/Int32',
+      serialization_format='cdr')
+      self.writer.create_topic(topic_info)
+
       self.recording = True
       self.get_logger().info(f"Grabando a 10Hz en carpeta: {folder_name}")
     else:
       self.recording = False
       self.writer = None
+      shutil.rmtree(self.last_folder, ignore_errors=True)
       self.get_logger().info("Grabación detenida. Presiona [Espacio] para iniciar otra o [x] para eliminar la última carpeta.")
+
+  def get_next_attempt(self):
+    attempt = 1
+    while True:
+      base_name = f"task{self.task:02}-{attempt:05}"
+      exists = any(
+        name.startswith(base_name)
+        for name in os.listdir(self.folder_prefix)
+      )
+      if not exists:
+        return attempt, self.folder_prefix + f"task{self.task:02}-{attempt:05}"
+      attempt += 1
+
+
 
   def record_messages(self):
     """Se ejecuta a 10Hz"""
@@ -241,6 +287,9 @@ class BagRecorder(Node):
 
   # --- Eliminar última carpeta ---
   def delete_last_folder(self):
+    if self.recording:
+      self.get_logger().info("Opción inválida.")
+      return
     if not self.last_folder:
       self.get_logger().warn("No hay carpeta anterior para borrar.")
       return
@@ -252,8 +301,38 @@ class BagRecorder(Node):
       self.last_folder = None
     else:
       self.get_logger().info("Operación cancelada.")
+  
+  def change_task(self):
+    if self.recording:
+      self.get_logger().info("No se puede cambiar la tarea durante la grabación.")
+      return
+    try:
+      new_task = input("Ingrese el número de tarea: ")
+      if not new_task.isdigit():
+        self.get_logger().warn("Entrada inválida.")
+        return
+      self.task = int(new_task)
+      self.get_logger().info(f"Tarea actual cambiada a: {self.task}")
+    except Exception as e:
+      self.get_logger().error(f"Error al cambiar tarea: {e}")
+      
+  def rename_last_folder(self, result):
+    if not self.last_folder:
+      self.get_logger().warn("No hay carpeta para renombrar.")
+      return
 
-def main(args=None):
+    if not os.path.exists(self.last_folder):
+      self.get_logger().warn("La carpeta no existe.")
+      return
+    new_folder = self.last_folder + f"-{result}"
+    try:
+      os.rename(self.last_folder, new_folder)
+      self.get_logger().info(f"Carpeta renombrada a: {new_folder}")
+      self.last_folder = new_folder  # actualizar referencia
+    except Exception as e:
+      self.get_logger().error(f"Error al renombrar carpeta: {e}")
+
+def init_node(args=None):
   rclpy.init(args=args)
   node = BagRecorder()
   try:
@@ -265,4 +344,4 @@ def main(args=None):
     rclpy.shutdown()
 
 if __name__ == '__main__':
-  main()
+  init_node()
