@@ -20,7 +20,7 @@ class Arm_Device(object):
         self.addr = 0x15
         self.bus = smbus.SMBus(1)
         # This delay allows the serial comunication to properly start
-        sleep(2)
+        sleep(5)
 
     # Set the bus servo angle interface: id: 1-6 (0 means sending 6 servos) angle: 0-180 Set the angle to which the servo will move.
     def Arm_serial_servo_write(self, id:int, angle:float, time:float)->None:

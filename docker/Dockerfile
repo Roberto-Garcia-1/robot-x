@@ -16,8 +16,8 @@ RUN python3 -m pip install --upgrade pip && \
 
 
 WORKDIR /home/robotcont/
-COPY ./bash_aliases  /home/robotcont/.bash_aliases
-RUN source /home/robotcont/.bash_aliases
+COPY bash_aliases  /root/.bash_aliases
+RUN source /root/.bash_aliases
 
 ENV ROS_DOMAIN_ID=10
 ENV RMW_IMPLEMENTATION=rmw_fastrtps_cpp
