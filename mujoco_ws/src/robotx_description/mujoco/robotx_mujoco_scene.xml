@@ -1,0 +1,37 @@
+<!-- ======================================= -->
+<!-- Piso -->
+<!-- ======================================= -->
+<light directional="false" diffuse=".2 .2 .2" specular="0 0 0"       pos="0 0 5"    dir="0 0 -1" castshadow="false"/>
+<light mode="targetbodycom" target="link1"  directional="false" diffuse=".8 .8 .8" specular="0.3 0.3 0.3" pos="0 0 4.0"  dir="0 0 -1"/>
+
+<geom name="floor" pos="0 0 0" size="0 0 .25" type="plane" material="matplane" condim="3"/>
+<!-- 
+<geom type="plane"
+      size="2 2 0.1"
+      rgba="0.8 0.8 0.8 1"/>
+-->
+<!-- ======================================= -->
+<!-- Mesa -->
+<!-- ======================================= -->
+<body name="table" pos="0.35 0 0">
+
+    <geom type="box"
+          size="0.25 0.35 0.02"
+          rgba="0.5 0.3 0.2 1"/>
+
+</body>
+
+<!-- ======================================= -->
+<!-- Cubo manipulable -->
+<!-- ======================================= -->
+<body name="cube" pos="0.25 0 0.1">
+
+    <freejoint/>
+
+    <geom type="box"
+          size="0.02 0.02 0.02"
+          mass="0.01"
+          rgba="1 0 0 1"
+          friction="1 0.1 0.1"/>
+
+</body>

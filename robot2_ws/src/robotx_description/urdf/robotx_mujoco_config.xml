@@ -1,0 +1,78 @@
+<!--<tendon>
+  <fixed name="gripper_tendon">
+    <joint joint="joint5a1" coef="1"/>
+    <joint joint="joint5a2" coef="-1"/>
+    <joint joint="joint5a3" coef="1"/>
+    <joint joint="joint5b1" coef="-1"/>
+    <joint joint="joint5b2" coef="1"/>
+    <joint joint="joint5b3" coef="-1"/>
+  </fixed>
+</tendon>-->
+<!--<equality>
+  <joint joint1="joint5a2" joint2="joint5a1" polycoef="0 -1 0 0 0" solimp="0.99 0.999 0.001 0.5 2"/>
+  <joint joint1="joint5a3" joint2="joint5a1" polycoef="0 1 0 0 0" solimp="0.99 0.999 0.001 0.5 2"/>
+  <joint joint1="joint5b1" joint2="joint5a1" polycoef="0 -1 0 0 0" solimp="0.99 0.999 0.001 0.5 2"/>
+  <joint joint1="joint5b2" joint2="joint5a1" polycoef="0 1 0 0 0" solimp="0.99 0.999 0.001 0.5 2"/>
+  <joint joint1="joint5b3" joint2="joint5a1" polycoef="0 -1 0 0 0" solimp="0.99 0.999 0.001 0.5 2"/>
+</equality>-->
+
+<actuator>
+  <position joint="joint1" kp="50" ctrlrange="-1.57 1.57"/>
+  <position joint="joint2" kp="50" ctrlrange="-1.57 1.57"/>
+  <position joint="joint3" kp="50" ctrlrange="-1.57 1.57"/>
+  <position joint="joint4" kp="50" ctrlrange="-1.57 1.57"/>
+  <position joint="joint5" kp="50" ctrlrange="-1.57 1.57"/>
+  <position joint="joint5a1" kp="50" ctrlrange="0 1.57"/>
+  <position joint="joint5a2" kp="50" ctrlrange="-1.57 0"/>
+  <position joint="joint5a3" kp="50" ctrlrange="0 1.57"/>
+  <position joint="joint5b1" kp="50" ctrlrange="-1.57 0"/>
+  <position joint="joint5b2" kp="50" ctrlrange="0 1.57"/>
+  <position joint="joint5b3" kp="50" ctrlrange="-1.57 0"/>
+  <!--<position tendon="gripper_tendon" kp="10" ctrlrange="0 9.42"/>-->
+</actuator>
+
+
+<compiler inertiafromgeom="true" angle="degree"/>
+<default>
+  <joint limited="true" damping="1" armature="0"/>
+  <geom condim="1"/>
+  <!--<motor ctrlrange="-.4 .4" ctrllimited="true"/>-->
+</default>
+
+<option timestep="0.005" iterations="50" tolerance="1e-10" solver="Newton" jacobian="dense" cone="pyramidal"/>
+
+<size nconmax="50" njmax="200" nstack="10000"/>
+
+<visual>
+  <map force="0.1" zfar="30"/>
+  <rgba haze="0.15 0.25 0.35 1"/>
+  <quality shadowsize="2048"/>
+  <global offwidth="800" offheight="800"/>
+</visual>
+<asset>
+  <texture type="skybox" builtin="gradient" rgb1="0.3 0.5 0.7" rgb2="0 0 0" width="512" height="512"/>
+  <texture name="texplane" type="2d" builtin="checker" rgb1=".2 .3 .4" rgb2=".1 0.15 0.2" width="512" height="512" mark="cross" markrgb=".8 .8 .8"/>
+  <texture name="texgeom" type="cube" builtin="flat" mark="cross" width="127" height="1278"
+      rgb1="0.8 0.6 0.4" rgb2="0.8 0.6 0.4" markrgb="1 1 1" random="0.01"/>
+  <material name="matplane" reflectance="0.3" texture="texplane" texrepeat="1 1" texuniform="true"/>
+  <material name="matgeom" texture="texgeom" texuniform="true" rgba="0.8 0.6 .4 1"/>
+</asset>
+<!--
+<default>
+  <joint damping="2" />
+</default>
+<option timestep="0.001"
+  solver="Newton"
+  iterations="50"
+  gravity="0 0 -9.81">
+  <flag constraint="enable"/>
+</option>
+-->
+
+
+<contact>
+  <exclude body1="world" body2="link1"/>
+  <exclude body1="link5a1" body2="link5b1"/>
+  <exclude body1="link5a2" body2="link5a3"/>
+  <exclude body1="link5b2" body2="link5b3"/>
+</contact>

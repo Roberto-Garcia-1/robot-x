@@ -1,0 +1,12 @@
+<actuator>
+  <position joint="joint_1" kp="100" ctrlrange="-1.57 1.57"/>
+  <position joint="joint_2" kp="100" ctrlrange="-1.57 1.57"/>
+  <position joint="joint_3" kp="100" ctrlrange="-1.57 1.57"/>
+  <position joint="joint_4" kp="100" ctrlrange="-1.57 1.57"/>
+  <position joint="joint_5" kp="100" ctrlrange="-1.57 1.57"/>
+</actuator>
+<default>
+  <joint damping="0.5" armature="0.01"/>
+  <geom friction="0.8 0.1 0.1"/>
+</default>
+<option timestep="0.0005"/>

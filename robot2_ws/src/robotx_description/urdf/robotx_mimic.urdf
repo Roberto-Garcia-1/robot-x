@@ -1,0 +1,126 @@
+<?xml version="1.0"?>
+<robot name="dofbot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- ================= PROPERTIES ================= -->
+  <xacro:property name="pkg" value="robotx_description"/>
+
+  <!-- ================= FILES ================= -->
+  <xacro:include filename="robotx_properties.urdf" />
+  <xacro:include filename="robotx_macros.urdf" />
+
+  <!-- ================= LINKS ================= -->
+  <xacro:link_with_mesh 
+    name="base_link" mesh="base_link.STL" material="gray" 
+    rpy="0 0 0" xyz="0 0 0" 
+    mass="${base_link_mass}" com="${base_link_com}" 
+    ixx="${base_link_ixx}" ixy="${base_link_ixy}" ixz="${base_link_ixz}"
+    iyy="${base_link_iyy}" iyz="${base_link_iyz}" izz="${base_link_izz}"/>
+  <xacro:link_with_mesh name="link1" mesh="link1.STL" material="light_green" 
+    rpy="0 0 0" xyz="0 0 0"
+    mass="${link1_mass}" com="${link1_com}"
+    ixx="${link1_ixx}" ixy="${link1_ixy}" ixz="${link1_ixz}"
+    iyy="${link1_iyy}" iyz="${link1_iyz}" izz="${link1_izz}"/>
+  <xacro:link_with_mesh name="link2" mesh="link2.STL" material="gray"
+    rpy="0 0 0" xyz="0 0 0"
+    mass="${link2_mass}" com="${link2_com}" 
+    ixx="${link2_ixx}" ixy="${link2_ixy}" ixz="${link2_ixz}"
+    iyy="${link2_iyy}" iyz="${link2_iyz}" izz="${link2_izz}"/>
+  <xacro:link_with_mesh name="link3" mesh="link3.STL" material="light_green" 
+  rpy="0 0 0" xyz="0 0 0"
+  mass="${link3_mass}" com="${link3_com}" 
+    ixx="${link3_ixx}" ixy="${link3_ixy}" ixz="${link3_ixz}"
+    iyy="${link3_iyy}" iyz="${link3_iyz}" izz="${link3_izz}"/>
+  <xacro:link_with_mesh name="link4" mesh="link4.STL" material="gray" 
+    rpy="0 0 0" xyz="0 0 0"
+    mass="${link4_mass}" com="${link4_com}" 
+    ixx="${link4_ixx}" ixy="${link4_ixy}" ixz="${link4_ixz}"
+    iyy="${link4_iyy}" iyz="${link4_iyz}" izz="${link4_izz}"/>
+  <xacro:link_with_mesh name="link5" mesh="link5.STL" material="light_green" 
+    rpy="0 0 0" xyz="0 0 0"
+    mass="${link5_mass}" com="${link5_com}" 
+    ixx="${link5_ixx}" ixy="${link5_ixy}" ixz="${link5_ixz}"
+    iyy="${link5_iyy}" iyz="${link5_iyz}" izz="${link5_izz}"/>
+  <xacro:link_with_mesh name="link5a1" mesh="link5a1.STL" material="white" 
+    rpy="0 0 0" xyz="0 0 0"
+    mass="${link5a1_mass}" com="${link5a1_com}" 
+    ixx="${link5a1_ixx}" ixy="${link5a1_ixy}" ixz="${link5a1_ixz}"
+    iyy="${link5a1_iyy}" iyz="${link5a1_iyz}" izz="${link5a1_izz}"/>
+  <xacro:link_with_mesh name="link5b1" mesh="link5b1.STL" material="white" 
+    rpy="0 0 0" xyz="0 0 0"
+    mass="${link5b1_mass}" com="${link5b1_com}" 
+    ixx="${link5b1_ixx}" ixy="${link5b1_ixy}" ixz="${link5b1_ixz}"
+    iyy="${link5b1_iyy}" iyz="${link5b1_iyz}" izz="${link5b1_izz}"/>
+  <xacro:link_with_mesh name="link5a2" mesh="link5a2.STL" material="white" 
+    rpy="0 0 0" xyz="0 0 0"
+    mass="${link5a2_mass}" com="${link5a2_com}" 
+    ixx="${link5a2_ixx}" ixy="${link5a2_ixy}" ixz="${link5a2_ixz}"
+    iyy="${link5a2_iyy}" iyz="${link5a2_iyz}" izz="${link5a2_izz}"/>
+  <xacro:link_with_mesh name="link5b2" mesh="link5b2.STL" material="white" 
+    rpy="0 0 0" xyz="0 0 0"
+    mass="${link5b2_mass}" com="${link5b2_com}" 
+    ixx="${link5b2_ixx}" ixy="${link5b2_ixy}" ixz="${link5b2_ixz}"
+    iyy="${link5b2_iyy}" iyz="${link5b2_iyz}" izz="${link5b2_izz}"/>
+  <xacro:link_with_mesh name="link5a3" mesh="link5a3.STL" material="white" 
+    rpy="0 0 0" xyz="0 0 0"
+    mass="${link5a3_mass}" com="${link5a3_com}" 
+    ixx="${link5a3_ixx}" ixy="${link5a3_ixy}" ixz="${link5a3_ixz}"
+    iyy="${link5a3_iyy}" iyz="${link5a3_iyz}" izz="${link5a3_izz}"/>
+  <xacro:link_with_mesh name="link5b3" mesh="link5b3.STL" material="white" 
+    rpy="0 0 0" xyz="0 0 0"
+    mass="${link5b3_mass}" com="${link5b3_com}" 
+    ixx="${link5b3_ixx}" ixy="${link5b3_ixy}" ixz="${link5b3_ixz}"
+    iyy="${link5b3_iyy}" iyz="${link5b3_iyz}" izz="${link5b3_izz}"/>
+  <xacro:empty_link name="linkcam"/>
+
+  <!-- ================= JOINTS ================= -->
+  <xacro:revolute_joint name="joint1" parent="base_link" child="link1"
+                        xyz="0 0 0.0607" rpy="0 0 0"
+                        lower="${-pi/2}" upper="${pi/2}"/>
+
+  <xacro:revolute_joint name="joint2" parent="link1" child="link2"
+                        xyz="0 -0.00031873 0.04145" rpy="${-pi/2} ${-pi/2} 0"
+                        lower="${-pi/2}" upper="${pi/2}"/>
+
+  <xacro:revolute_joint name="joint3" parent="link2" child="link3"
+                        xyz="0.08285 0 0" rpy="0 0 0"
+                        lower="${-pi/2}" upper="${pi/2}"/>
+
+  <xacro:revolute_joint name="joint4" parent="link3" child="link4"
+                        xyz="0.08285 0 0" rpy="0 0 0"
+                        lower="${-pi/2}" upper="${pi/2}"/>
+
+  <xacro:revolute_joint name="joint5" parent="link4" child="link5"
+                        xyz="0.07385 -0.001 0" rpy="0 ${pi/2} 0"
+                        lower="${-pi/2}" upper="${pi/2}"/>
+
+  <!-- ================= GRIPPER JOINTS ================= -->
+  <xacro:revolute_joint name="joint5a1" parent="link5" child="link5a1"
+                        xyz="0.0124 0.001 0.0322" rpy="${pi/2} 0 0"
+                        lower="0" upper="${pi/2}"/>
+  <xacro:mimic_revolute_joint name="joint5a2" parent="link5a1" child="link5a2"
+                              xyz="0.03 0 0.0045" rpy="0 0 0"
+                              lower="${-pi/2}" upper="0"
+                              mimic="joint5a1" multiplier="-1"/> 
+  <xacro:mimic_revolute_joint name="joint5a3" parent="link5" child="link5a3"
+                              xyz="0.0045 -0.0005 0.0502" rpy="${pi/2} 0 0"
+                              lower="0" upper="${pi/2}"
+                              mimic="joint5a1" multiplier="1"/> 
+
+  <xacro:mimic_revolute_joint name="joint5b1" parent="link5" child="link5b1"
+                              xyz="-0.01215 -0.0035 0.0322" rpy="${pi/2} 0 0"
+                              lower="${-pi/2}" upper="0"
+                              mimic="joint5a1" multiplier="-1"/>
+  <xacro:mimic_revolute_joint name="joint5b2" parent="link5b1" child="link5b2"
+                              xyz="-0.03 -0.0002 0" rpy="0 0 0"
+                              lower="0" upper="${pi/2}"
+                              mimic="joint5b1" multiplier="-1"/> 
+  <xacro:mimic_revolute_joint name="joint5b3" parent="link5" child="link5b3"
+                              xyz="-0.0045 -0.0005 0.0502" rpy="${pi/2} 0 0"
+                              lower="${-pi/2}" upper="0"
+                              mimic="joint5b1" multiplier="1"/> 
+  
+  <!-- ================= FIXED ================= -->
+  <xacro:fixed_joint name="jointcamera" parent="link4" child="linkcam"
+                              xyz="0.0697 -0.0481 0" rpy="0 0 0"/> 
+
+</robot>

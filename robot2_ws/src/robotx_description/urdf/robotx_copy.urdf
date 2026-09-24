@@ -1,0 +1,142 @@
+<?xml version="1.0"?>
+<robot name="dofbot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- ================= PROPIEDADES ================= -->
+  <xacro:property name="pkg" value="robotx_description"/>
+  <!-- ================= MACROS ================= -->
+  <xacro:macro name="link_with_mesh" params="name mesh material">
+    <link name="${name}">
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://${pkg}/meshes/${mesh}" />
+        </geometry>
+        <material name="${material}">
+        </material>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://${pkg}/meshes/${mesh}" />
+        </geometry>
+      </collision>
+    </link>
+  </xacro:macro>
+
+  <xacro:macro name="empty_link" params="name">
+    <link name="${name}">
+    </link>
+  </xacro:macro>
+
+  <xacro:macro name="revolute_joint" params="name parent child xyz rpy lower upper">
+    <joint name="${name}" type="revolute">
+      <origin xyz="${xyz}" rpy="${rpy}" />
+      <parent link="${parent}" />
+      <child link="${child}" />
+      <axis xyz="0 0 1" />
+      <limit effort="30" velocity="1.0" lower="${lower}" upper="${upper}"/>
+    </joint>
+  </xacro:macro>
+  <xacro:macro name="fixed_joint" params="name parent child xyz rpy">
+    <joint name="${name}" type="fixed">
+      <origin xyz="${xyz}" rpy="${rpy}" />
+      <parent link="${parent}" />
+      <child link="${child}" />
+      <axis xyz="0 0 1"/>
+    </joint>
+  </xacro:macro>
+
+  <xacro:macro name="mimic_revolute_joint" params="name parent child xyz rpy lower upper mimic multiplier">
+    <joint name="${name}" type="revolute">
+      <origin xyz="${xyz}" rpy="${rpy}" />
+      <parent link="${parent}" />
+      <child link="${child}" />
+      <axis xyz="0 0 1" />
+      <limit effort="30" velocity="1.0" lower="${lower}" upper="${upper}"/>
+      <mimic joint="${mimic}" multiplier="${multiplier}"/>
+    </joint>
+  </xacro:macro>
+  <!-- ================= MATERIALES ================= -->
+  <material name="black">
+    <color rgba="0 0 0 1" />
+  </material>
+  <material name="green">
+    <color rgba="0 1 0 1" />
+  </material>
+  <material name="white">
+    <color rgba="1 1 1 1" />
+  </material>
+  <material name="gray">
+    <color rgba="0.59 0.66 0.68 1" />
+  </material>
+  <material name="light_green">
+    <color rgba="0 0.63 0.23 1" />
+  </material>
+
+  <!-- ================= LINKS ================= -->
+  <xacro:link_with_mesh name="base_link" mesh="base_link.STL" material="gray"/>
+  <xacro:link_with_mesh name="link1" mesh="link1.STL" material="light_green"/>
+  <xacro:link_with_mesh name="link2" mesh="link2.STL" material="gray"/>
+  <xacro:link_with_mesh name="link3" mesh="link3.STL" material="light_green"/>
+  <xacro:link_with_mesh name="link4" mesh="link4.STL" material="gray"/>
+  <xacro:link_with_mesh name="link5" mesh="link5.STL" material="light_green"/>
+  <xacro:link_with_mesh name="link5a1" mesh="link5a1.STL" material="white"/>
+  <xacro:link_with_mesh name="link5b1" mesh="link5b1.STL" material="white"/>
+  <xacro:link_with_mesh name="link5a2" mesh="link5a2.STL" material="white"/>
+  <xacro:link_with_mesh name="link5b2" mesh="link5b2.STL" material="white"/>
+  <xacro:link_with_mesh name="link5a3" mesh="link5a3.STL" material="white"/>
+  <xacro:link_with_mesh name="link5b3" mesh="link5b3.STL" material="white"/>
+  <xacro:empty_link name="linkcam"/>
+
+  <!-- ================= JOINTS ================= -->
+  <xacro:revolute_joint name="joint1" parent="base_link" child="link1"
+                        xyz="0 0 0.06605" rpy="-0.010805 0 0"
+                        lower="-1.5708" upper="1.5708"/>
+
+  <xacro:revolute_joint name="joint2" parent="link1" child="link2"
+                        xyz="0 -0.00031873 0.04145" rpy="0 1.5708 0"
+                        lower="-1.5708" upper="1.5708"/>
+
+  <xacro:revolute_joint name="joint3" parent="link2" child="link3"
+                        xyz="-0.08285 0 0" rpy="0 0 0"
+                        lower="-1.5708" upper="1.5708"/>
+
+  <xacro:revolute_joint name="joint4" parent="link3" child="link4"
+                        xyz="-0.08285 0 0" rpy="0 0 0.0083081"
+                        lower="-1.5708" upper="1.5708"/>
+
+  <xacro:revolute_joint name="joint5" parent="link4" child="link5"
+                        xyz="-0.07385 -0.001 0" rpy="0 -1.57 0"
+                        lower="-1.5708" upper="3.1416"/>
+
+  <!-- ================= GRIPPER ================= -->
+  <xacro:revolute_joint name="joint5a1" parent="link5" child="link5a1"
+                        xyz="0.0124 0.001 0.0322" rpy="${pi/2} 0 0"
+                        lower="0" upper="${pi/2}"/>
+  <xacro:mimic_revolute_joint name="joint5a2" parent="link5a1" child="link5a2"
+                              xyz="0.03 0 0.0045" rpy="0 0 0"
+                              lower="${-pi}" upper="${pi}"
+                              mimic="joint5a1" multiplier="-1"/> 
+  <xacro:mimic_revolute_joint name="joint5a3" parent="link5" child="link5a3"
+                              xyz="0.0045 -0.0005 0.0502" rpy="${pi/2} 0 0"
+                              lower="${-pi}" upper="${pi}"
+                              mimic="joint5a1" multiplier="1"/> 
+
+  <xacro:mimic_revolute_joint name="joint5b1" parent="link5" child="link5b1"
+                              xyz="-0.01215 -0.0035 0.0322" rpy="${pi/2} 0 0"
+                              lower="${-pi}" upper="${pi}"
+                              mimic="joint5a1" multiplier="-1"/>
+  <xacro:mimic_revolute_joint name="joint5b2" parent="link5b1" child="link5b2"
+                              xyz="-0.03 -0.0002 0" rpy="0 0 0"
+                              lower="${-pi}" upper="${pi}"
+                              mimic="joint5b1" multiplier="-1"/> 
+  <xacro:mimic_revolute_joint name="joint5b3" parent="link5" child="link5b3"
+                              xyz="-0.0045 -0.0005 0.0502" rpy="${pi/2} 0 0"
+                              lower="${-pi}" upper="${pi}"
+                              mimic="joint5b1" multiplier="1"/> 
+  
+  <!-- ================= FIXED ================= -->
+  <xacro:fixed_joint name="jointcamera" parent="link4" child="linkcam"
+                              xyz="-0.0697 -0.0481 -0.0006" rpy="0 0 ${pi}"/> 
+
+</robot>

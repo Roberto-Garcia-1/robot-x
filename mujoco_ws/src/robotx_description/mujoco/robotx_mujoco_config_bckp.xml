@@ -1,0 +1,67 @@
+<actuator>
+  <position name="joint1" joint="joint1" kp="50" ctrlrange="-1.57 1.57"/>
+  <position name="joint2" joint="joint2" kp="50" ctrlrange="-1.57 1.57"/>
+  <position name="joint3" joint="joint3" kp="50" ctrlrange="-1.57 1.57"/>
+  <position name="joint4" joint="joint4" kp="50" ctrlrange="-1.57 1.57"/>
+  <position name="joint5" joint="joint5" kp="50" ctrlrange="-1.57 1.57"/>
+  <position name="joint5a1" joint="joint5a1" kp="50" ctrlrange="-1.57 1.57"/>
+  <position name="joint5a2" joint="joint5a2" kp="50" ctrlrange="-1.57 1.57"/>
+  <position name="joint5a3" joint="joint5a3" kp="50" ctrlrange="-1.57 1.57"/>
+  <position name="joint5b1" joint="joint5b1" kp="50" ctrlrange="-1.57 1.57"/>
+  <position name="joint5b2" joint="joint5b2" kp="50" ctrlrange="-1.57 1.57"/>
+  <position name="joint5b3" joint="joint5b3" kp="50" ctrlrange="-1.57 1.57"/>
+  <!--<position tendon="gripper_tendon" kp="10" ctrlrange="0 9.42"/>-->
+</actuator>
+
+
+<compiler inertiafromgeom="true" angle="radian"/>
+
+<default>
+  <joint limited="true" damping="1" frictionloss="0.02" stiffness="0" armature="0.01"/>
+  <!--damping: 1: vibra 1.5: rígido-->
+  <geom condim="3" friction="1 0.005 0.0001"/>
+  <!--<motor ctrlrange="-.4 .4" ctrllimited="true"/>-->
+</default>
+
+<!--
+  cone: fricción
+ -->
+<option timestep="0.005" iterations="100" tolerance="1e-8" solver="Newton" jacobian="dense" cone="pyramidal" gravity="0 0 -9.81"
+ integrator="implicitfast" />
+
+
+<size nconmax="50" njmax="200" nstack="10000"/>
+
+<visual>
+  <map force="0.1" zfar="30"/>
+  <rgba haze="0.15 0.25 0.35 1"/>
+  <quality shadowsize="2048"/>
+  <global offwidth="800" offheight="800"/>
+</visual>
+<asset>
+  <texture type="skybox" builtin="gradient" rgb1="0.3 0.5 0.7" rgb2="0 0 0" width="512" height="512"/>
+  <texture name="texplane" type="2d" builtin="checker" rgb1=".2 .3 .4" rgb2=".1 0.15 0.2" width="512" height="512" mark="cross" markrgb=".8 .8 .8"/>
+  <texture name="texgeom" type="cube" builtin="flat" mark="cross" width="127" height="1278"
+      rgb1="0.8 0.6 0.4" rgb2="0.8 0.6 0.4" markrgb="1 1 1" random="0.01"/>
+  <material name="matplane" reflectance="0.3" texture="texplane" texrepeat="1 1" texuniform="true"/>
+  <material name="matgeom" texture="texgeom" texuniform="true" rgba="0.8 0.6 .4 1"/>
+</asset>
+<!--
+<default>
+  <joint damping="2" />
+</default>
+<option timestep="0.001"
+  solver="Newton"
+  iterations="50"
+  gravity="0 0 -9.81">
+  <flag constraint="enable"/>
+</option>
+-->
+
+
+<contact>
+  <exclude body1="world" body2="link1"/>
+  <exclude body1="link5a1" body2="link5b1"/>
+  <exclude body1="link5a2" body2="link5a3"/>
+  <exclude body1="link5b2" body2="link5b3"/>
+</contact>

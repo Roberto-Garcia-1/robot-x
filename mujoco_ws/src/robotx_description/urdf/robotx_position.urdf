@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+<robot name="dofbot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- ================= PROPERTIES ================= -->
+  <xacro:property name="pkg" value="robotx_description"/>
+
+  <!-- ================= FILES ================= -->
+  <xacro:include filename="robotx.urdf"/>
+
+  <ros2_control name="RobotSystem" type="system">
+
+    <hardware>
+      <plugin>mujoco_ros2_control/MujocoSystemInterface</plugin>
+      <param name="mujoco_model">
+        $(find robotx_description)/mujoco/robotx_mujoco.xml
+    </param>
+    </hardware>
+
+    <joint name="joint1">
+
+      <command_interface name="position"/>
+
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+
+    </joint>
+
+    <joint name="joint2">
+
+      <command_interface name="position"/>
+
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+
+    </joint>
+    <joint name="joint3">
+
+      <command_interface name="position"/>
+
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+
+    </joint>
+    <joint name="joint4">
+
+      <command_interface name="position"/>
+
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+
+    </joint>
+    <joint name="joint5">
+
+      <command_interface name="position"/>
+
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+
+    </joint>
+
+    <joint name="joint5a1">
+      <command_interface name="position"/>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+    <joint name="joint5a2">
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+    <joint name="joint5a3">
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+    
+    <joint name="joint5b1">
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+    <joint name="joint5b2">
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+    <joint name="joint5b3">
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+
+  </ros2_control>
+
+
+
+</robot>

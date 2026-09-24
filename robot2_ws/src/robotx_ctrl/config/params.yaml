@@ -1,0 +1,13 @@
+/robotx_paramsrv_node:
+  ros__parameters:
+    movil:
+      ang_vel: 0.04
+      int_array: [1, 7, 13]
+      label_sample: 'Blue label'
+      lin_vel: 0.1
+      pid_const:
+      - 0.5
+      - 1.0
+      - 1000.0
+    sample_timer: 0.0
+

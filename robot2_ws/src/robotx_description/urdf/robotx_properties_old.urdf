@@ -1,0 +1,153 @@
+<?xml version="1.0"?>
+<robot name="dofbot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- ================= MATERIALS ================= -->
+  <material name="black">
+    <color rgba="0 0 0 1" />
+  </material>
+  <material name="green">
+    <color rgba="0 1 0 1" />
+  </material>
+  <material name="white">
+    <color rgba="1 1 1 1" />
+  </material>
+  <material name="gray">
+    <color rgba="0.59 0.66 0.68 1" />
+  </material>
+  <material name="light_green">
+    <color rgba="0 0.63 0.23 1" />
+  </material>
+
+  <!-- ================= INERTIAS ================= -->
+  <!-- ===== base_link ===== -->
+  <xacro:property name="base_link_mass" value="3.69954e-01"/>
+  <xacro:property name="base_link_com" value="-0.048241 -0.000057 0.021293"/>
+  <xacro:property name="base_link_ixx" value="6.27914e-04"/>
+  <xacro:property name="base_link_ixy" value="5.41941e-07"/>
+  <xacro:property name="base_link_ixz" value="-3.20848e-04"/>
+  <xacro:property name="base_link_iyy" value="2.06292e-03"/>
+  <xacro:property name="base_link_iyz" value="5.68092e-07"/>
+  <xacro:property name="base_link_izz" value="2.10302e-03"/>
+
+
+  <!-- ===== link1 ===== -->
+  <xacro:property name="link1_mass" value="5.21330e-02"/>
+  <xacro:property name="link1_com" value="-0.000000 0.000058 0.017982"/>
+  <xacro:property name="link1_ixx" value="2.04890e-05"/>
+  <xacro:property name="link1_ixy" value="-1.00000e-08"/>
+  <xacro:property name="link1_ixz" value="1.00000e-08"/>
+  <xacro:property name="link1_iyy" value="1.68449e-05"/>
+  <xacro:property name="link1_iyz" value="-7.50244e-08"/>
+  <xacro:property name="link1_izz" value="1.87563e-05"/>
+
+
+  <!-- ===== link2 ===== -->
+  <xacro:property name="link2_mass" value="8.52143e-02"/>
+  <xacro:property name="link2_com" value="0.024890 -0.002259 0.000081"/>
+  <xacro:property name="link2_ixx" value="1.57532e-05"/>
+  <xacro:property name="link2_ixy" value="-2.36670e-06"/>
+  <xacro:property name="link2_ixz" value="4.10316e-07"/>
+  <xacro:property name="link2_iyy" value="7.18242e-05"/>
+  <xacro:property name="link2_iyz" value="2.04186e-08"/>
+  <xacro:property name="link2_izz" value="6.65029e-05"/>
+
+
+  <!-- ===== link3 ===== -->
+  <xacro:property name="link3_mass" value="8.52113e-02"/>
+  <xacro:property name="link3_com" value="0.024890 -0.002259 0.000651"/>
+  <xacro:property name="link3_ixx" value="1.57528e-05"/>
+  <xacro:property name="link3_ixy" value="-2.36750e-06"/>
+  <xacro:property name="link3_ixz" value="3.82535e-07"/>
+  <xacro:property name="link3_iyy" value="7.18221e-05"/>
+  <xacro:property name="link3_iyz" value="2.48617e-08"/>
+  <xacro:property name="link3_izz" value="6.65014e-05"/>
+
+
+  <!-- ===== link4 ===== -->
+  <xacro:property name="link4_mass" value="1.60513e-01"/>
+  <xacro:property name="link4_com" value="0.038494 -0.004349 0.000785"/>
+  <xacro:property name="link4_ixx" value="7.57127e-05"/>
+  <xacro:property name="link4_ixy" value="-5.61913e-06"/>
+  <xacro:property name="link4_ixz" value="-4.69039e-08"/>
+  <xacro:property name="link4_iyy" value="1.07106e-04"/>
+  <xacro:property name="link4_iyz" value="-6.26283e-07"/>
+  <xacro:property name="link4_izz" value="1.62611e-04"/>
+
+
+  <!-- ===== link5 ===== -->
+  <xacro:property name="link5_mass" value="1.11920e-01"/>
+  <xacro:property name="link5_com" value="0.002194 0.017899 0.029433"/>
+  <xacro:property name="link5_ixx" value="3.11801e-05"/>
+  <xacro:property name="link5_ixy" value="-5.57049e-07"/>
+  <xacro:property name="link5_ixz" value="-6.73702e-07"/>
+  <xacro:property name="link5_iyy" value="2.79208e-05"/>
+  <xacro:property name="link5_iyz" value="-4.97005e-06"/>
+  <xacro:property name="link5_izz" value="3.62525e-05"/>
+
+
+  <!-- ===== link5a1 ===== -->
+  <xacro:property name="link5a1_mass" value="5.42231e-03"/>
+  <xacro:property name="link5a1_com" value="0.006493 0.000318 0.004269"/>
+  <xacro:property name="link5a1_ixx" value="1.55742e-07"/>
+  <xacro:property name="link5a1_ixy" value="1.46659e-08"/>
+  <xacro:property name="link5a1_ixz" value="3.18943e-08"/>
+  <xacro:property name="link5a1_iyy" value="8.58889e-07"/>
+  <xacro:property name="link5a1_iyz" value="-1.00000e-08"/>
+  <xacro:property name="link5a1_izz" value="9.59872e-07"/>
+
+
+  <!-- ===== link5b1 ===== -->
+  <xacro:property name="link5b1_mass" value="4.87536e-03"/>
+  <xacro:property name="link5b1_com" value="-0.007172 0.000257 0.000650"/>
+  <xacro:property name="link5b1_ixx" value="1.30783e-07"/>
+  <xacro:property name="link5b1_ixy" value="-1.93309e-08"/>
+  <xacro:property name="link5b1_ixz" value="-6.30040e-08"/>
+  <xacro:property name="link5b1_iyy" value="8.13770e-07"/>
+  <xacro:property name="link5b1_iyz" value="-1.00000e-08"/>
+  <xacro:property name="link5b1_izz" value="8.58767e-07"/>
+
+
+  <!-- ===== link5a2 ===== -->
+  <xacro:property name="link5a2_mass" value="6.24262e-03"/>
+  <xacro:property name="link5a2_com" value="-0.006191 0.022587 -0.003138"/>
+  <xacro:property name="link5a2_ixx" value="1.52974e-06"/>
+  <xacro:property name="link5a2_ixy" value="2.46533e-07"/>
+  <xacro:property name="link5a2_ixz" value="1.00000e-08"/>
+  <xacro:property name="link5a2_iyy" value="9.90392e-08"/>
+  <xacro:property name="link5a2_iyz" value="-1.95022e-08"/>
+  <xacro:property name="link5a2_izz" value="1.59847e-06"/>
+
+
+  <!-- ===== link5b2 ===== -->
+  <xacro:property name="link5b2_mass" value="6.24262e-03"/>
+  <xacro:property name="link5b2_com" value="0.006021 0.022633 -0.003000"/>
+  <xacro:property name="link5b2_ixx" value="1.53693e-06"/>
+  <xacro:property name="link5b2_ixy" value="-2.35784e-07"/>
+  <xacro:property name="link5b2_ixz" value="1.00000e-08"/>
+  <xacro:property name="link5b2_iyy" value="9.89977e-08"/>
+  <xacro:property name="link5b2_iyz" value="1.00000e-08"/>
+  <xacro:property name="link5b2_izz" value="1.59847e-06"/>
+
+
+  <!-- ===== link5a3 ===== -->
+  <xacro:property name="link5a3_mass" value="2.58849e-03"/>
+  <xacro:property name="link5a3_com" value="0.014410 0.000216 -0.000686"/>
+  <xacro:property name="link5a3_ixx" value="5.83703e-08"/>
+  <xacro:property name="link5a3_ixy" value="-1.00000e-08"/>
+  <xacro:property name="link5a3_ixz" value="1.00000e-08"/>
+  <xacro:property name="link5a3_iyy" value="4.53009e-07"/>
+  <xacro:property name="link5a3_iyz" value="1.00000e-08"/>
+  <xacro:property name="link5a3_izz" value="4.03520e-07"/>
+
+
+  <!-- ===== link5b3 ===== -->
+  <xacro:property name="link5b3_mass" value="2.58849e-03"/>
+  <xacro:property name="link5b3_com" value="-0.014411 0.000175 -0.000686"/>
+  <xacro:property name="link5b3_ixx" value="5.83396e-08"/>
+  <xacro:property name="link5b3_ixy" value="1.00000e-08"/>
+  <xacro:property name="link5b3_ixz" value="-1.00000e-08"/>
+  <xacro:property name="link5b3_iyy" value="4.53040e-07"/>
+  <xacro:property name="link5b3_iyz" value="1.00000e-08"/>
+  <xacro:property name="link5b3_izz" value="4.03520e-07"/>
+ 
+</robot>
