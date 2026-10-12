@@ -13,28 +13,29 @@
   <!--<position tendon="gripper_tendon" kp="10" ctrlrange="0 9.42"/>-->
 </actuator>
 <equality>
-  <joint joint1="joint5a2" joint2="joint5a1" polycoef="0 -1 0 0 0" solimp="0.99 0.999 0.001 0.5 2"/>
-  <joint joint1="joint5a3" joint2="joint5a1" polycoef="0 1 0 0 0" solimp="0.99 0.999 0.001 0.5 2"/>
-  <joint joint1="joint5b1" joint2="joint5a1" polycoef="0 -1 0 0 0" solimp="0.99 0.999 0.001 0.5 2"/>
-  <joint joint1="joint5b2" joint2="joint5a1" polycoef="0 1 0 0 0" solimp="0.99 0.999 0.001 0.5 2"/>
-  <joint joint1="joint5b3" joint2="joint5a1" polycoef="0 -1 0 0 0" solimp="0.99 0.999 0.001 0.5 2"/>
+  <joint joint1="joint5a2" joint2="joint5a1" polycoef="0 -1 0 0 0"/>
+  <joint joint1="joint5a3" joint2="joint5a1" polycoef="0 1 0 0 0"/>
+  <joint joint1="joint5b1" joint2="joint5a1" polycoef="0 -1 0 0 0"/>
+  <joint joint1="joint5b2" joint2="joint5a1" polycoef="0 1 0 0 0"/>
+  <joint joint1="joint5b3" joint2="joint5a1" polycoef="0 -1 0 0 0"/>
 </equality>
 
 
-<compiler inertiafromgeom="true" angle="radian"/>
+<compiler angle="radian"/>
 
 <default>
-  <joint limited="true" damping="0.1" frictionloss="0.1" stiffness="0" armature="0.01"/>
-  <!--damping: 1: vibra 1.5: rígido-->
-  <geom condim="3" friction="1.5 0.005 0.0001"/>
-  <!--<motor ctrlrange="-.4 .4" ctrllimited="true"/>-->
-</default>
+    <joint armature="0.02" damping="1.5"/>
+    <geom condim="4" friction="1.8 0.1 0.001" solimp="0.95 0.99"/>
+    <!-- <geom condim="4" friction="5.0 0.01 0.001" solimp="0.95 0.99 0.001 0.5 2" solref="0.02 1.0"/> -->
+    <general ctrlrange="-3.14159 3.14159" biastype="affine" gainprm="100" biasprm="0 -100"/>
+  </default>
 
 <!--
   cone: fricción
  -->
-<option timestep="0.005" iterations="100" tolerance="1e-8" solver="Newton" jacobian="dense" cone="pyramidal" gravity="0 0 -9.81"
- integrator="implicitfast" />
+  <option timestep="0.002" gravity="0 0 -9.81" integrator="Euler">
+    <flag contact="enable"/>
+  </option>
 
 
 <size nconmax="50" njmax="200" nstack="10000"/>

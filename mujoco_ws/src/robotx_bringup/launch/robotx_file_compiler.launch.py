@@ -1,36 +1,62 @@
+
 from launch import LaunchDescription
+from launch.actions import DeclareLaunchArgument, RegisterEventHandler
+from launch.event_handlers import OnProcessExit
+from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
-from launch.actions import ExecuteProcess, RegisterEventHandler
-from launch.event_handlers import OnProcessStart
-
-from launch.substitutions import Command
-from launch_ros.parameter_descriptions import ParameterValue
-from ament_index_python.packages import get_package_share_directory
-from launch.actions import TimerAction
-import os
-
-from moveit_configs_utils import MoveItConfigsBuilder
-
 
 def generate_launch_description():
+  # Argumentos de configuración
+  defaults = {
+    "description_package"   : "robotx_description",
+    "input_relative_path"   : "urdf/robotx_position.urdf",
+    "compiled_relative_path": "urdf/robotx_position_compiled.urdf",
+    "config_relative_path"  : "mujoco_model/robotx_mujoco_config.xml",
+    "scene_relative_path"   : "mujoco_model/robotx_mujoco_scene.xml",
+    "output_relative_path"  : "mujoco_model/robotx_mujoco.xml",
+  }
+
+  launch_arguments = [
+    DeclareLaunchArgument(name, default_value=value, description=f"Parámetro: {name}")
+    for name, value in defaults.items()
+  ]
+
+  # Compilar URDF/Xacro
   urdf_compile = Node(
-    package='robotx_description',
-    executable='urdf_file_compiler',
-    output='screen'
+    package="robotx_description",
+    executable="urdf_file_compiler",
+    name="urdf_file_compiler",
+    output="screen",
+    parameters=[{
+      "description_package": LaunchConfiguration("description_package"),
+      "input_relative_path": LaunchConfiguration("input_relative_path"),
+      "output_relative_path": LaunchConfiguration("compiled_relative_path"),
+    }],
   )
+
+  # Transformar el URDF compilado a MuJoCo
   mujoco_compile = Node(
-    package='robotx_mujoco',
-    executable='mujoco_file_transformer',
-    output='screen'
+    package="robotx_mujoco",
+    executable="mujoco_file_transformer",
+    name="mujoco_file_compiler",
+    output="screen",
+    parameters=[{
+      "description_package": LaunchConfiguration("description_package"),
+      "urdf_relative_path": LaunchConfiguration("compiled_relative_path"),
+      "config_relative_path": LaunchConfiguration("config_relative_path"),
+      "scene_relative_path": LaunchConfiguration("scene_relative_path"),
+      "output_relative_path": LaunchConfiguration("output_relative_path"),
+    }],
   )
+
+  # Iniciar la transformación después de que termine la compilación
   start_mujoco_compile = RegisterEventHandler(
-    OnProcessStart(
+    OnProcessExit(
       target_action=urdf_compile,
-      on_start=[mujoco_compile]
+      on_exit=[mujoco_compile],
     )
   )
-  launch_description = LaunchDescription([
-    urdf_compile,
-    start_mujoco_compile
-  ])
-  return launch_description
+
+  return LaunchDescription(
+    launch_arguments + [urdf_compile, start_mujoco_compile]
+  )
