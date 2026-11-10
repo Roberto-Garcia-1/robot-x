@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<robot name="so100" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <!-- ================= MATERIALS ================= -->
+  <material name="3d_printed"><color rgba="0.8 0.8 0.8 1"/></material>
+  <material name="sts3215"><color rgba="0.2 0.2 0.2 1"/></material>
+
+  <!-- ================= INERTIAL PROPERTIES ================= -->
+  <xacro:property name="base_mass" value="1.0"/>
+  <xacro:property name="base_com" value="0 0 0"/>
+  <xacro:property name="base_ixx" value="0.01"/><xacro:property name="base_ixy" value="0"/><xacro:property name="base_ixz" value="0"/>
+  <xacro:property name="base_iyy" value="0.01"/><xacro:property name="base_iyz" value="0"/><xacro:property name="base_izz" value="0.01"/>
+
+  <xacro:property name="shoulder_mass" value="0.119226"/>
+  <xacro:property name="shoulder_com" value="-9.07886e-05 0.0590972 0.031089"/>
+  <xacro:property name="shoulder_ixx" value="5.94278e-05"/><xacro:property name="shoulder_ixy" value="0"/><xacro:property name="shoulder_ixz" value="0"/>
+  <xacro:property name="shoulder_iyy" value="5.89975e-05"/><xacro:property name="shoulder_iyz" value="0"/><xacro:property name="shoulder_izz" value="3.13712e-05"/>
+
+  <xacro:property name="upper_arm_mass" value="0.162409"/>
+  <xacro:property name="upper_arm_com" value="-1.72052e-05 0.0701802 0.00310545"/>
+  <xacro:property name="upper_arm_ixx" value="0.000213312"/><xacro:property name="upper_arm_ixy" value="0"/><xacro:property name="upper_arm_ixz" value="0"/>
+  <xacro:property name="upper_arm_iyy" value="0.000167164"/><xacro:property name="upper_arm_iyz" value="0"/><xacro:property name="upper_arm_izz" value="7.01522e-05"/>
+
+  <xacro:property name="lower_arm_mass" value="0.147968"/>
+  <xacro:property name="lower_arm_com" value="-0.00339604 0.00137796 0.0768007"/>
+  <xacro:property name="lower_arm_ixx" value="0.000138803"/><xacro:property name="lower_arm_ixy" value="0"/><xacro:property name="lower_arm_ixz" value="0"/>
+  <xacro:property name="lower_arm_iyy" value="0.000107748"/><xacro:property name="lower_arm_iyz" value="0"/><xacro:property name="lower_arm_izz" value="4.84242e-05"/>
+
+  <xacro:property name="wrist_mass" value="0.0661321"/>
+  <xacro:property name="wrist_com" value="-0.00852653 -0.0352279 -2.34622e-05"/>
+  <xacro:property name="wrist_ixx" value="3.45403e-05"/><xacro:property name="wrist_ixy" value="0"/><xacro:property name="wrist_ixz" value="0"/>
+  <xacro:property name="wrist_iyy" value="2.39041e-05"/><xacro:property name="wrist_iyz" value="0"/><xacro:property name="wrist_izz" value="1.94704e-05"/>
+
+  <xacro:property name="gripper_mass" value="0.0929859"/>
+  <xacro:property name="gripper_com" value="0.00552377 -0.0280167 0.000483583"/>
+  <xacro:property name="gripper_ixx" value="5.03136e-05"/><xacro:property name="gripper_ixy" value="0"/><xacro:property name="gripper_ixz" value="0"/>
+  <xacro:property name="gripper_iyy" value="4.64098e-05"/><xacro:property name="gripper_iyz" value="0"/><xacro:property name="gripper_izz" value="2.72961e-05"/>
+
+  <xacro:property name="jaw_mass" value="0.0202444"/>
+  <xacro:property name="jaw_com" value="-0.00161745 -0.0303473 0.000449646"/>
+  <xacro:property name="jaw_ixx" value="1.11265e-05"/><xacro:property name="jaw_ixy" value="0"/><xacro:property name="jaw_ixz" value="0"/>
+  <xacro:property name="jaw_iyy" value="8.99651e-06"/><xacro:property name="jaw_iyz" value="0"/><xacro:property name="jaw_izz" value="2.99548e-06"/>
+</robot>

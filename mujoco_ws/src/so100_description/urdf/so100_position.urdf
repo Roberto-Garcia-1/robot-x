@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<robot name="so100" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- ================= FILES ================= -->
+  <xacro:include filename="so100.urdf.xacro"/>
+
+  <ros2_control name="RobotSystem" type="system">
+
+    <hardware>
+      <plugin>mujoco_ros2_control/MujocoSystemInterface</plugin>
+      <param name="mujoco_model">
+        $(find so100_description)/mujoco_model/so100_mujoco.xml
+    </param>
+    </hardware>
+
+    <joint name="shoulder_pan">
+
+      <command_interface name="position"/>
+
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+
+    </joint>
+
+    <joint name="shoulder_lift">
+
+      <command_interface name="position"/>
+
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+
+    </joint>
+    <joint name="elbow_flex">
+
+      <command_interface name="position"/>
+
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+
+    </joint>
+    <joint name="wrist_flex">
+
+      <command_interface name="position"/>
+
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+
+    </joint>
+    <joint name="wrist_roll">
+
+      <command_interface name="position"/>
+
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+
+    </joint>
+
+    <joint name="gripper">
+      <command_interface name="position"/>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+  </ros2_control>
+
+
+
+</robot>

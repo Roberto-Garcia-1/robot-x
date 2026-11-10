@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<robot name="so100" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <!-- ================= PROPERTIES AND MACROS ================= -->
+  <xacro:include filename="so100.urdf.xacro"/>
+  <!-- ================= TRANSMISSIONS ================= -->
+  <xacro:position_transmission joint="shoulder_pan"   actuator="motor1"/>
+  <xacro:position_transmission joint="shoulder_lift"  actuator="motor2"/>
+  <xacro:position_transmission joint="elbow_flex"     actuator="motor3"/>
+  <xacro:position_transmission joint="wrist_flex"     actuator="motor4"/>
+  <xacro:position_transmission joint="wrist_roll"     actuator="motor5"/>
+  <xacro:position_transmission joint="gripper"        actuator="motor6"/>
+</robot>

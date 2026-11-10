@@ -31,7 +31,6 @@
     <geom type="box"
           size="0.02 0.02 0.02"
           mass="0.01"
-          rgba="1 0 0 1"
-          friction="1 0.1 0.1"/>
+          rgba="1 0 0 1"/>
 
 </body>

@@ -1,0 +1,82 @@
+<actuator>
+  <position name="shoulder_lift" joint="shoulder_lift" kp="50" ctrlrange="-1.57 1.57"/>
+  <position name="elbow_flex" joint="elbow_flex" kp="50" ctrlrange="-1.57 1.57"/>
+  <position name="wrist_flex" joint="wrist_flex" kp="50" ctrlrange="-1.57 1.57"/>
+  <position name="wrist_roll" joint="wrist_roll" kp="50" ctrlrange="-1.57 1.57"/>
+  <position name="shoulder_pan" joint="shoulder_pan" kp="50" ctrlrange="-1.57 1.57"/>
+  <position name="gripper" joint="gripper" kp="50" ctrlrange="-1.57 1.57"/>
+  <!-- <position name="joint5a2" joint="joint5a2" kp="50" ctrlrange="-1.57 1.57"/>
+  <position name="joint5a3" joint="joint5a3" kp="50" ctrlrange="-1.57 1.57"/>
+  <position name="joint5b1" joint="joint5b1" kp="50" ctrlrange="-1.57 1.57"/>
+  <position name="joint5b2" joint="joint5b2" kp="50" ctrlrange="-1.57 1.57"/>
+  <position name="joint5b3" joint="joint5b3" kp="50" ctrlrange="-1.57 1.57"/> -->
+  <!--<position tendon="gripper_tendon" kp="10" ctrlrange="0 9.42"/>-->
+</actuator>
+  <!-- <xacro:revolute_joint name="shoulder_pan"   parent="base"       child="shoulder"  xyz="0 -0.0452 0.0165"  rpy="1.57079 0 0" axis="0 1 0" lower="-2"       upper="2"       effort="35" velocity="1"/>
+  <xacro:revolute_joint name="shoulder_lift"  parent="shoulder"   child="upper_arm" xyz="0 0.1025 0.0306"   rpy="-1.8 0 0"    axis="1 0 0" lower="0"        upper="3.5"     effort="35" velocity="1"/>
+  <xacro:revolute_joint name="elbow_flex"     parent="upper_arm"  child="lower_arm" xyz="0 0.11257 0.028"   rpy="1.57079 0 0" axis="1 0 0" lower="-3.14158" upper="0"       effort="35" velocity="1"/>
+  <xacro:revolute_joint name="wrist_flex"     parent="lower_arm"  child="wrist"     xyz="0 0.0052 0.1349"   rpy="-1 0 0"      axis="1 0 0" lower="-2.5"     upper="1.2"     effort="35" velocity="1"/>
+  <xacro:revolute_joint name="wrist_roll"     parent="wrist"      child="gripper"   xyz="0 -0.0601 0"       rpy="0 1.57079 0" axis="0 1 0" lower="-3.14158" upper="3.14158" effort="35" velocity="1"/>
+  <xacro:revolute_joint name="gripper"        parent="gripper"    child="jaw"       xyz="-0.0202 -0.0244 0" rpy="0 3.14158 0" axis="0 0 1" lower="-0.2"     upper="2.0"     effort="35" velocity="1"/> -->
+
+<!-- <equality>
+  <joint joint1="joint5a2" joint2="joint5a1" polycoef="0 -1 0 0 0"/>
+  <joint joint1="joint5a3" joint2="joint5a1" polycoef="0 1 0 0 0"/>
+  <joint joint1="joint5b1" joint2="joint5a1" polycoef="0 -1 0 0 0"/>
+  <joint joint1="joint5b2" joint2="joint5a1" polycoef="0 1 0 0 0"/>
+  <joint joint1="joint5b3" joint2="joint5a1" polycoef="0 -1 0 0 0"/>
+</equality> -->
+
+
+<compiler angle="radian"/>
+
+<default>
+    <joint armature="0.02" damping="1.5"/>
+    <geom condim="4" friction="1.8 0.1 0.001" solimp="0.95 0.99"/>
+    <!-- <geom condim="4" friction="5.0 0.01 0.001" solimp="0.95 0.99 0.001 0.5 2" solref="0.02 1.0"/> -->
+    <general ctrlrange="-3.14159 3.14159" biastype="affine" gainprm="100" biasprm="0 -100"/>
+  </default>
+
+<!--
+  cone: fricción
+ -->
+  <option timestep="0.002" gravity="0 0 -9.81" integrator="Euler">
+    <flag contact="enable"/>
+  </option>
+
+
+<size nconmax="50" njmax="200" nstack="10000"/>
+
+<visual>
+  <map force="0.1" zfar="30"/>
+  <rgba haze="0.15 0.25 0.35 1"/>
+  <quality shadowsize="2048"/>
+  <global offwidth="800" offheight="800"/>
+</visual>
+<asset>
+  <texture type="skybox" builtin="gradient" rgb1="0.3 0.5 0.7" rgb2="0 0 0" width="512" height="512"/>
+  <texture name="texplane" type="2d" builtin="checker" rgb1=".2 .3 .4" rgb2=".1 0.15 0.2" width="512" height="512" mark="cross" markrgb=".8 .8 .8"/>
+  <texture name="texgeom" type="cube" builtin="flat" mark="cross" width="127" height="1278"
+      rgb1="0.8 0.6 0.4" rgb2="0.8 0.6 0.4" markrgb="1 1 1" random="0.01"/>
+  <material name="matplane" reflectance="0.3" texture="texplane" texrepeat="1 1" texuniform="true"/>
+  <material name="matgeom" texture="texgeom" texuniform="true" rgba="0.8 0.6 .4 1"/>
+</asset>
+<!--
+<default>
+  <joint damping="2" />
+</default>
+<option timestep="0.001"
+  solver="Newton"
+  iterations="50"
+  gravity="0 0 -9.81">
+  <flag constraint="enable"/>
+</option>
+-->
+
+
+<!-- <contact>
+  <exclude body1="world" body2="link1"/>
+  <exclude body1="link5a1" body2="link5b1"/>
+  <exclude body1="link5a2" body2="link5a3"/>
+  <exclude body1="link5b2" body2="link5b3"/>
+</contact> -->

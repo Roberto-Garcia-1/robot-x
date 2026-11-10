@@ -7,6 +7,7 @@ from launch_ros.actions import Node
 
 def generate_launch_description():
   # Argumentos de configuración
+  """
   defaults = {
     "description_package"   : "robotx_description",
     "input_relative_path"   : "urdf/robotx_position.urdf",
@@ -15,6 +16,15 @@ def generate_launch_description():
     "scene_relative_path"   : "mujoco_model/robotx_mujoco_scene.xml",
     "output_relative_path"  : "mujoco_model/robotx_mujoco.xml",
   }
+  """
+  defaults = {
+      "description_package"   : "so100_description",
+      "input_relative_path"   : "urdf/so100_position.urdf",
+      "compiled_relative_path": "urdf/so100_position_compiled.urdf",
+      "config_relative_path"  : "mujoco_model/so100_mujoco_config.xml",
+      "scene_relative_path"   : "mujoco_model/so100_mujoco_scene.xml",
+      "output_relative_path"  : "mujoco_model/so100_mujoco.xml",
+    }
 
   launch_arguments = [
     DeclareLaunchArgument(name, default_value=value, description=f"Parámetro: {name}")

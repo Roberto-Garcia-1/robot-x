@@ -1,0 +1,86 @@
+<mujoco model="so100">
+  <compiler angle="radian"/>
+
+  <size njmax="200" nconmax="50" nstack="10000"/>
+
+  <visual>
+    <global offwidth="800" offheight="800"/>
+    <quality shadowsize="2048"/>
+    <map force="0.1" zfar="30"/>
+    <rgba haze="0.15 0.25 0.35 1"/>
+  </visual>
+
+  <default>
+    <joint armature="0.02" damping="1.5"/>
+    <geom condim="4" friction="1.8 0.1 0.001" solimp="0.95 0.99"/>
+    <general ctrlrange="-3.14159 3.14159" biastype="affine" gainprm="100" biasprm="0 -100"/>
+  </default>
+
+  <asset>
+    <texture type="skybox" colorspace="auto" builtin="gradient" rgb1="0.3 0.5 0.7" rgb2="0 0 0" width="512" height="3072"/>
+    <texture type="2d" colorspace="auto" name="texplane" builtin="checker" mark="cross" rgb1="0.2 0.3 0.4" rgb2="0.1 0.15 0.2" markrgb="0.8 0.8 0.8" width="512" height="512"/>
+    <texture type="cube" colorspace="auto" name="texgeom" builtin="flat" mark="cross" rgb1="0.8 0.6 0.4" rgb2="0.8 0.6 0.4" markrgb="1 1 1" width="127" height="762"/>
+    <material name="matplane" texture="texplane" texuniform="true" reflectance="0.3"/>
+    <material name="matgeom" texture="texgeom" texuniform="true" rgba="0.8 0.6 0.4 1"/>
+    <mesh name="Base" content_type="model/stl" file="/home/roberto/Dev/robot-x/mujoco_ws/install/so100_description/share/so100_description/meshes/Base.stl"/>
+    <mesh name="Rotation_Pitch" content_type="model/stl" file="/home/roberto/Dev/robot-x/mujoco_ws/install/so100_description/share/so100_description/meshes/Rotation_Pitch.stl"/>
+    <mesh name="Upper_Arm" content_type="model/stl" file="/home/roberto/Dev/robot-x/mujoco_ws/install/so100_description/share/so100_description/meshes/Upper_Arm.stl"/>
+    <mesh name="Lower_Arm" content_type="model/stl" file="/home/roberto/Dev/robot-x/mujoco_ws/install/so100_description/share/so100_description/meshes/Lower_Arm.stl"/>
+    <mesh name="Wrist_Pitch_Roll" content_type="model/stl" file="/home/roberto/Dev/robot-x/mujoco_ws/install/so100_description/share/so100_description/meshes/Wrist_Pitch_Roll.stl"/>
+    <mesh name="Fixed_Jaw" content_type="model/stl" file="/home/roberto/Dev/robot-x/mujoco_ws/install/so100_description/share/so100_description/meshes/Fixed_Jaw.stl"/>
+    <mesh name="Moving_Jaw" content_type="model/stl" file="/home/roberto/Dev/robot-x/mujoco_ws/install/so100_description/share/so100_description/meshes/Moving_Jaw.stl"/>
+  </asset>
+
+  <worldbody>
+    <geom quat="1 0 0 0" type="mesh" rgba="0.2 0.2 0.2 1" mesh="Base"/>
+    <geom name="floor" size="0 0 0.25" type="plane" condim="3" material="matplane"/>
+    <light castshadow="false" pos="0 0 5" diffuse="0.2 0.2 0.2" specular="0 0 0"/>
+    <light target="shoulder" pos="0 0 4" diffuse="0.8 0.8 0.8" mode="targetbodycom"/>
+    <body name="shoulder" pos="0 -0.0452 0.0165" quat="0.707109 0.707105 0 0">
+      <inertial pos="-9.07886e-05 0.0590972 0.031089" mass="0.119226" diaginertia="5.94278e-05 5.89975e-05 3.13712e-05"/>
+      <joint name="shoulder_pan" range="-2 2" actuatorfrcrange="-35 35" axis="0 1 0"/>
+      <geom quat="1 0 0 0" type="mesh" rgba="0.2 0.2 0.2 1" mesh="Rotation_Pitch"/>
+      <body name="upper_arm" pos="0 0.1025 0.0306" quat="0.62161 -0.783327 0 0">
+        <inertial pos="-1.72052e-05 0.0701802 0.00310545" mass="0.162409" diaginertia="0.000213312 0.000167164 7.01522e-05"/>
+        <joint name="shoulder_lift" range="0 3.5" actuatorfrcrange="-35 35" axis="1 0 0"/>
+        <geom pos="0 0 0" quat="1 0 0 0" type="mesh" rgba="0.2 0.2 0.2 1" mesh="Upper_Arm"/>
+        <body name="lower_arm" pos="0 0.11257 0.028" quat="0.707109 0.707105 0 0">
+          <inertial pos="-0.00339604 0.00137796 0.0768007" mass="0.147968" diaginertia="0.000138803 0.000107748 4.84242e-05"/>
+          <joint name="elbow_flex" range="-3.14158 0" actuatorfrcrange="-35 35" axis="1 0 0"/>
+          <geom quat="1 0 0 0" type="mesh" rgba="0.2 0.2 0.2 1" mesh="Lower_Arm"/>
+          <body name="wrist" pos="0 0.0052 0.1349" quat="0.877582 -0.479426 0 0">
+            <inertial pos="-0.00852653 -0.0352279 -2.34622e-05" mass="0.0661321" diaginertia="3.45403e-05 2.39041e-05 1.94704e-05"/>
+            <joint name="wrist_flex" range="-2.5 1.2" actuatorfrcrange="-35 35" axis="1 0 0"/>
+            <geom quat="1 0 0 0" type="mesh" rgba="0.2 0.2 0.2 1" mesh="Wrist_Pitch_Roll"/>
+            <body name="gripper" pos="0 -0.0601 0" quat="0.707109 0 0.707105 0">
+              <inertial pos="0.00552377 -0.0280167 0.000483583" mass="0.0929859" diaginertia="5.03136e-05 4.64098e-05 2.72961e-05"/>
+              <joint name="wrist_roll" range="-3.14158 3.14158" actuatorfrcrange="-35 35" axis="0 1 0"/>
+              <geom quat="1 0 0 0" type="mesh" rgba="0.2 0.2 0.2 1" mesh="Fixed_Jaw"/>
+              <body name="jaw" pos="-0.0202 -0.0244 0" quat="6.32679e-06 0 1 0">
+                <inertial pos="-0.00161745 -0.0303473 0.000449646" mass="0.0202444" diaginertia="1.11265e-05 8.99651e-06 2.99548e-06"/>
+                <joint name="gripper" range="-0.2 2" actuatorfrcrange="-35 35"/>
+                <geom quat="1 0 0 0" type="mesh" rgba="0.8 0.8 0.8 1" mesh="Moving_Jaw"/>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+    </body>
+    <body name="table" pos="0.35 0 0">
+      <geom size="0.25 0.35 0.02" type="box" rgba="0.5 0.3 0.2 1"/>
+    </body>
+    <body name="cube" pos="0.25 0 0.1">
+      <joint type="free" armature="0" damping="0"/>
+      <geom size="0.02 0.02 0.02" type="box" rgba="1 0 0 1" mass="0.01"/>
+    </body>
+  </worldbody>
+
+  <actuator>
+    <general name="shoulder_lift" joint="shoulder_lift" ctrlrange="-1.57 1.57" gainprm="50" biasprm="0 -50"/>
+    <general name="elbow_flex" joint="elbow_flex" ctrlrange="-1.57 1.57" gainprm="50" biasprm="0 -50"/>
+    <general name="wrist_flex" joint="wrist_flex" ctrlrange="-1.57 1.57" gainprm="50" biasprm="0 -50"/>
+    <general name="wrist_roll" joint="wrist_roll" ctrlrange="-1.57 1.57" gainprm="50" biasprm="0 -50"/>
+    <general name="shoulder_pan" joint="shoulder_pan" ctrlrange="-1.57 1.57" gainprm="50" biasprm="0 -50"/>
+    <general name="gripper" joint="gripper" ctrlrange="-1.57 1.57" gainprm="50" biasprm="0 -50"/>
+  </actuator>
+</mujoco>

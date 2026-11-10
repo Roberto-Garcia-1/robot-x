@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<robot name="so100" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <!-- ================= MACROS ================= -->
+  <xacro:macro name="link_with_mesh"  params="name mesh collider material 
+                                      rpy:='0.0 0.0 0.0', xyz:='0.0 0.0 0.0'
+                                      mass com ixx ixy ixz iyy iyz izz">
+    <link name="${name}">
+      <visual>
+        <origin xyz="${xyz}" rpy="${rpy}" />
+        <geometry>
+          <mesh filename="package://${pkg}/meshes/${mesh}" />
+        </geometry>
+        <material name="${material}">
+        </material>
+      </visual>
+      <collision>
+        <origin xyz="${xyz}" rpy="${rpy}" />
+        <geometry>
+          <mesh filename="package://${pkg}/meshes/${collider}" />
+        </geometry>
+      </collision>
+      <inertial>
+        <origin xyz="${com}" rpy="${rpy}"/>
+        <mass value="${mass}"/>
+        <inertia
+          ixx="${ixx}" ixy="${ixy}" ixz="${ixz}"
+          iyy="${iyy}" iyz="${iyz}"
+          izz="${izz}"/>
+      </inertial>
+    </link>
+  </xacro:macro>
+
+  <xacro:macro name="empty_link" params="name rpy:='0.0 0.0 0.0', xyz:='0.0 0.0 0.0'">
+    <link name="${name}">
+    </link>
+  </xacro:macro>
+
+  <xacro:macro name="revolute_joint" params="name parent child xyz rpy lower:='${-pi}' upper:='${pi}' effort:='10.0' velocity:='10.0' acceleration:='10.0'">
+    <joint name="${name}" type="revolute">
+      <origin xyz="${xyz}" rpy="${rpy}" />
+      <parent link="${parent}" />
+      <child link="${child}" />
+      <axis xyz="0 0 1" />
+      <limit effort="${effort}" velocity="${velocity}" acceleration="${acceleration}" lower="${lower}" upper="${upper}"/>
+    </joint>
+  </xacro:macro>
+  <xacro:macro name="fixed_joint" params="name parent child xyz rpy">
+    <joint name="${name}" type="fixed">
+      <origin xyz="${xyz}" rpy="${rpy}" />
+      <parent link="${parent}" />
+      <child link="${child}" />
+      <axis xyz="0 0 1"/>
+    </joint>
+  </xacro:macro>
+
+  <xacro:macro name="mimic_revolute_joint" params="name parent child xyz rpy lower:='${-pi}' upper:='${pi}' effort:='10.0' velocity:='10.0' acceleration:='10.0' mimic multiplier">
+    <joint name="${name}" type="revolute">
+      <origin xyz="${xyz}" rpy="${rpy}" />
+      <parent link="${parent}" />
+      <child link="${child}" />
+      <axis xyz="0 0 1" />
+      <limit effort="${effort}" velocity="${velocity}" acceleration="${acceleration}" lower="${lower}" upper="${upper}"/>
+      <mimic joint="${mimic}" multiplier="${multiplier}"/>
+    </joint>
+  </xacro:macro>
+ 
+</robot>

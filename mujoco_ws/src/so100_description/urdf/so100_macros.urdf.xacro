@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<robot name="so100" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <!-- ================= LINK MACRO ================= -->
+  <xacro:macro name="link_with_mesh" params="name visual1 material1 mass com ixx ixy ixz iyy iyz izz visual2:='' material2:='' collision:=''">
+    <link name="${name}">
+      <inertial>
+        <origin xyz="${com}" rpy="0 0 0"/>
+        <mass value="${mass}"/>
+        <inertia ixx="${ixx}" ixy="${ixy}" ixz="${ixz}" iyy="${iyy}" iyz="${iyz}" izz="${izz}"/>
+      </inertial>
+      <visual>
+        <geometry><mesh filename="package://${pkg}/meshes/${visual1}"/></geometry>
+        <material name="${material1}"/>
+      </visual>
+      <xacro:if value="${visual2 != ''}">
+        <visual>
+          <geometry><mesh filename="package://${pkg}/meshes/${visual2}"/></geometry>
+          <material name="${material2}"/>
+        </visual>
+      </xacro:if>
+      <xacro:if value="${collision != ''}">
+        <collision><geometry><mesh filename="package://${pkg}/meshes/${collision}"/></geometry></collision>
+      </xacro:if>
+    </link>
+  </xacro:macro>
+  <!-- ================= JOINT MACROS ================= -->
+  <xacro:macro name="revolute_joint" params="name parent child xyz rpy axis lower upper effort velocity">
+    <joint name="${name}" type="revolute">
+      <origin xyz="${xyz}" rpy="${rpy}"/>
+      <parent link="${parent}"/>
+      <child link="${child}"/>
+      <axis xyz="${axis}"/>
+      <limit lower="${lower}" upper="${upper}" effort="${effort}" velocity="${velocity}"/>
+    </joint>
+  </xacro:macro>
+  <xacro:macro name="fixed_joint" params="name parent child xyz rpy">
+    <joint name="${name}" type="fixed">
+      <origin xyz="${xyz}" rpy="${rpy}"/>
+      <parent link="${parent}"/>
+      <child link="${child}"/>
+    </joint>
+  </xacro:macro>
+  <xacro:macro name="position_transmission" params="joint actuator">
+    <transmission name="${joint}_trans">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="${joint}"><hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface></joint>
+      <actuator name="${actuator}"><hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface><mechanicalReduction>1</mechanicalReduction></actuator>
+    </transmission>
+  </xacro:macro>
+</robot>

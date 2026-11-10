@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<robot name="so100" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <!-- ================= PROPERTIES AND MACROS ================= -->
+  <xacro:property name="pkg" value="so100_description"/>
+  <xacro:include filename="so100_properties.urdf.xacro"/>
+  <xacro:include filename="so100_macros.urdf.xacro"/>
+
+  <!-- ================= LINKS ================= -->
+  <xacro:link_with_mesh name="base"       visual1="Base.stl"              material1="3d_printed" mass="${base_mass}"      com="${base_com}"       ixx="${base_ixx}" ixy="${base_ixy}" ixz="${base_ixz}" iyy="${base_iyy}" iyz="${base_iyz}" izz="${base_izz}"                               visual2="Base_Motor.stl" material2="sts3215"              collision="Base.stl"/>
+  <xacro:link_with_mesh name="shoulder"   visual1="Rotation_Pitch.stl"    material1="3d_printed" mass="${shoulder_mass}"  com="${shoulder_com}"   ixx="${shoulder_ixx}" ixy="${shoulder_ixy}" ixz="${shoulder_ixz}" iyy="${shoulder_iyy}" iyz="${shoulder_iyz}" izz="${shoulder_izz}"       visual2="Rotation_Pitch_Motor.stl" material2="sts3215"    collision="Rotation_Pitch.stl"/>
+  <xacro:link_with_mesh name="upper_arm"  visual1="Upper_Arm.stl"         material1="3d_printed" mass="${upper_arm_mass}" com="${upper_arm_com}"  ixx="${upper_arm_ixx}" ixy="${upper_arm_ixy}" ixz="${upper_arm_ixz}" iyy="${upper_arm_iyy}" iyz="${upper_arm_iyz}" izz="${upper_arm_izz}" visual2="Upper_Arm_Motor.stl" material2="sts3215"         collision="Upper_Arm.stl"/>
+  <xacro:link_with_mesh name="lower_arm"  visual1="Lower_Arm.stl"         material1="3d_printed" mass="${lower_arm_mass}" com="${lower_arm_com}"  ixx="${lower_arm_ixx}" ixy="${lower_arm_ixy}" ixz="${lower_arm_ixz}" iyy="${lower_arm_iyy}" iyz="${lower_arm_iyz}" izz="${lower_arm_izz}" visual2="Lower_Arm_Motor.stl" material2="sts3215"         collision="Lower_Arm.stl"/>
+  <xacro:link_with_mesh name="wrist"      visual1="Wrist_Pitch_Roll.stl"  material1="3d_printed" mass="${wrist_mass}"     com="${wrist_com}"      ixx="${wrist_ixx}" ixy="${wrist_ixy}" ixz="${wrist_ixz}" iyy="${wrist_iyy}" iyz="${wrist_iyz}" izz="${wrist_izz}"                         visual2="Wrist_Pitch_Roll_Motor.stl" material2="sts3215"  collision="Wrist_Pitch_Roll.stl"/>
+  <xacro:link_with_mesh name="gripper"    visual1="Fixed_Jaw.stl"         material1="3d_printed" mass="${gripper_mass}"   com="${gripper_com}"    ixx="${gripper_ixx}" ixy="${gripper_ixy}" ixz="${gripper_ixz}" iyy="${gripper_iyy}" iyz="${gripper_iyz}" izz="${gripper_izz}"             visual2="Fixed_Jaw_Motor.stl" material2="sts3215"         collision="Fixed_Jaw.stl"/>
+  <xacro:link_with_mesh name="jaw"        visual1="Moving_Jaw.stl"        material1="3d_printed" mass="${jaw_mass}"       com="${jaw_com}"        ixx="${jaw_ixx}" ixy="${jaw_ixy}" ixz="${jaw_ixz}" iyy="${jaw_iyy}" iyz="${jaw_iyz}" izz="${jaw_izz}"                                                                                               collision="Moving_Jaw.stl"/>
+  <!-- ================= JOINTS ================= -->
+  <xacro:revolute_joint name="shoulder_pan"   parent="base"       child="shoulder"  xyz="0 -0.0452 0.0165"  rpy="1.57079 0 0" axis="0 1 0" lower="-2"       upper="2"       effort="35" velocity="1"/>
+  <xacro:revolute_joint name="shoulder_lift"  parent="shoulder"   child="upper_arm" xyz="0 0.1025 0.0306"   rpy="-1.8 0 0"    axis="1 0 0" lower="0"        upper="3.5"     effort="35" velocity="1"/>
+  <xacro:revolute_joint name="elbow_flex"     parent="upper_arm"  child="lower_arm" xyz="0 0.11257 0.028"   rpy="1.57079 0 0" axis="1 0 0" lower="-3.14158" upper="0"       effort="35" velocity="1"/>
+  <xacro:revolute_joint name="wrist_flex"     parent="lower_arm"  child="wrist"     xyz="0 0.0052 0.1349"   rpy="-1 0 0"      axis="1 0 0" lower="-2.5"     upper="1.2"     effort="35" velocity="1"/>
+  <xacro:revolute_joint name="wrist_roll"     parent="wrist"      child="gripper"   xyz="0 -0.0601 0"       rpy="0 1.57079 0" axis="0 1 0" lower="-3.14158" upper="3.14158" effort="35" velocity="1"/>
+  <xacro:revolute_joint name="gripper"        parent="gripper"    child="jaw"       xyz="-0.0202 -0.0244 0" rpy="0 3.14158 0" axis="0 0 1" lower="-0.2"     upper="2.0"     effort="35" velocity="1"/>
+</robot>
