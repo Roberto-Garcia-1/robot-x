@@ -17,7 +17,7 @@ from moveit_configs_utils import MoveItConfigsBuilder
 # CONFIGURACIÓN PREDETERMINADA
 # ============================================================
 
-"""
+
 # robotx
 DEFAULT_DESCRIPTION_PACKAGE = "robotx_description"
 DEFAULT_URDF_RELATIVE_PATH = "urdf/robotx_position.urdf"
@@ -49,7 +49,7 @@ DEFAULT_ARM_CONTROLLER = "arm_controller"
 DEFAULT_GRIPPER_CONTROLLER = "gripper_controller"
 
 DEFAULT_MUJOCO_PACKAGE = "mujoco_ros2_control"
-
+"""
 def launch_setup(context, *args, **kwargs):
   # Lectura de argumentos
   description_package = LaunchConfiguration("description_package").perform(context)
