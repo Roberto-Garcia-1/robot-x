@@ -15,8 +15,8 @@
   <xacro:link_with_mesh name="jaw"        visual1="Moving_Jaw.stl"        material1="3d_printed" mass="${jaw_mass}"       com="${jaw_com}"        ixx="${jaw_ixx}" ixy="${jaw_ixy}" ixz="${jaw_ixz}" iyy="${jaw_iyy}" iyz="${jaw_iyz}" izz="${jaw_izz}"                                                                                               collision="Moving_Jaw.stl"/>
   <!-- ================= JOINTS ================= -->
   <xacro:revolute_joint name="shoulder_pan"   parent="base"       child="shoulder"  xyz="0 -0.0452 0.0165"  rpy="1.57079 0 0" axis="0 1 0" lower="-2"       upper="2"       effort="35" velocity="1"/>
-  <xacro:revolute_joint name="shoulder_lift"  parent="shoulder"   child="upper_arm" xyz="0 0.1025 0.0306"   rpy="-1.8 0 0"    axis="1 0 0" lower="0"        upper="3.5"     effort="35" velocity="1"/>
-  <xacro:revolute_joint name="elbow_flex"     parent="upper_arm"  child="lower_arm" xyz="0 0.11257 0.028"   rpy="1.57079 0 0" axis="1 0 0" lower="-3.14158" upper="0"       effort="35" velocity="1"/>
+  <xacro:revolute_joint name="shoulder_lift"  parent="shoulder"   child="upper_arm" xyz="0 0.1025 0.0306"   rpy="-1.8 0 0"    axis="1 0 0" lower="-0.1"     upper="3.5"     effort="35" velocity="1"/>
+  <xacro:revolute_joint name="elbow_flex"     parent="upper_arm"  child="lower_arm" xyz="0 0.11257 0.028"   rpy="1.57079 0 0" axis="1 0 0" lower="-3.14158" upper="0.1"     effort="35" velocity="1"/>
   <xacro:revolute_joint name="wrist_flex"     parent="lower_arm"  child="wrist"     xyz="0 0.0052 0.1349"   rpy="-1 0 0"      axis="1 0 0" lower="-2.5"     upper="1.2"     effort="35" velocity="1"/>
   <xacro:revolute_joint name="wrist_roll"     parent="wrist"      child="gripper"   xyz="0 -0.0601 0"       rpy="0 1.57079 0" axis="0 1 0" lower="-3.14158" upper="3.14158" effort="35" velocity="1"/>
   <xacro:revolute_joint name="gripper"        parent="gripper"    child="jaw"       xyz="-0.0202 -0.0244 0" rpy="0 3.14158 0" axis="0 0 1" lower="-0.2"     upper="2.0"     effort="35" velocity="1"/>

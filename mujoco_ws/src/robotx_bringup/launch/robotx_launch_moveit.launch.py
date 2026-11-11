@@ -18,6 +18,7 @@ from moveit_configs_utils import MoveItConfigsBuilder
 # ============================================================
 
 """
+# robotx
 DEFAULT_DESCRIPTION_PACKAGE = "robotx_description"
 DEFAULT_URDF_RELATIVE_PATH = "urdf/robotx_position.urdf"
 DEFAULT_RVIZ_RELATIVE_PATH = "rviz/rviz_moveit.conf.rviz"
@@ -33,7 +34,7 @@ DEFAULT_GRIPPER_CONTROLLER = "gripper_controller"
 
 DEFAULT_MUJOCO_PACKAGE = "mujoco_ros2_control"
 """
-
+# so100
 DEFAULT_DESCRIPTION_PACKAGE = "so100_description"
 DEFAULT_URDF_RELATIVE_PATH = "urdf/so100_position.urdf"
 DEFAULT_RVIZ_RELATIVE_PATH = "rviz/rviz_moveit.conf.rviz"
@@ -160,7 +161,7 @@ def launch_setup(context, *args, **kwargs):
   #moveit_parameters["robot_description"] = urdf_param["robot_description"]
   # Controller
   moveit_controllers = os.path.join(
-    "robotx_moveit_config",
+    moveit_package,
     "config",
     "moveit_controllers.yaml"
   )

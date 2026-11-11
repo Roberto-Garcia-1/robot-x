@@ -72,11 +72,15 @@
   <flag constraint="enable"/>
 </option>
 -->
-
-
-<!-- <contact>
-  <exclude body1="world" body2="link1"/>
-  <exclude body1="link5a1" body2="link5b1"/>
-  <exclude body1="link5a2" body2="link5a3"/>
-  <exclude body1="link5b2" body2="link5b3"/>
-</contact> -->
+<contact>
+<exclude body1="world"          body2="shoulder"/>
+<exclude body1="world"          body2="upper_arm"/>
+<exclude body1="gripper"    body2="lower_arm"/>
+<exclude body1="gripper"    body2="jaw"/>
+<exclude body1="gripper"    body2="wrist"/>
+<exclude body1="lower_arm"     body2="jaw"/>
+<exclude body1="lower_arm"     body2="upper_arm"/>
+<exclude body1="lower_arm"     body2="wrist"/>
+<exclude body1="jaw"        body2="wrist"/>
+<exclude body1="shoulder"       body2="upper_arm"/>
+</contact>

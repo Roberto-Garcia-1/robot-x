@@ -185,14 +185,14 @@
     <parent link="shoulder"/>
     <child link="upper_arm"/>
     <axis xyz="1 0 0"/>
-    <limit effort="35" lower="0" upper="3.5" velocity="1"/>
+    <limit effort="35" lower="-0.1" upper="3.5" velocity="1"/>
   </joint>
   <joint name="elbow_flex" type="revolute">
     <origin rpy="1.57079 0 0" xyz="0 0.11257 0.028"/>
     <parent link="upper_arm"/>
     <child link="lower_arm"/>
     <axis xyz="1 0 0"/>
-    <limit effort="35" lower="-3.14158" upper="0" velocity="1"/>
+    <limit effort="35" lower="-3.14158" upper="0.1" velocity="1"/>
   </joint>
   <joint name="wrist_flex" type="revolute">
     <origin rpy="-1 0 0" xyz="0 0.0052 0.1349"/>
