@@ -1,34 +1,46 @@
-trajectory_execution:
-  moveit_manage_controllers: true
+# MoveIt uses this configuration for controller management
 
 moveit_controller_manager: moveit_simple_controller_manager/MoveItSimpleControllerManager
 
 moveit_simple_controller_manager:
-
   controller_names:
     - arm_controller
+    - arm_effort_controller
     - gripper_controller
+    - gripper_effort_controller
 
   arm_controller:
     type: FollowJointTrajectory
-    action_ns: follow_joint_trajectory
-    default: true
-
     joints:
       - joint1
       - joint2
       - joint3
       - joint4
       - joint5
+    action_ns: follow_joint_trajectory
+    default: true
+
   gripper_controller:
-    type: GripperCommand
+    type: ParallelGripperCommand
+    joints:
+      - joint5a1
     action_ns: gripper_cmd
     default: true
 
+  arm_effort_controller:
+    type: FollowJointTrajectory
+    joints:
+      - joint1
+      - joint2
+      - joint3
+      - joint4
+      - joint5
+    action_ns: follow_joint_trajectory
+    default: false
+
+  gripper_effort_controller:
+    type: FollowJointTrajectory
     joints:
       - joint5a1
-  planning_pipelines:
-    pipeline_names:
-      - ompl
-      - pilz_industrial_motion_planner
-  default_planning_pipeline: ompl
+    action_ns: follow_joint_trajectory
+    default: false

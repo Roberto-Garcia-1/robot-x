@@ -40,7 +40,7 @@ DEFAULT_URDF_RELATIVE_PATH = "urdf/so100_position.urdf"
 DEFAULT_RVIZ_RELATIVE_PATH = "rviz/rviz_moveit.conf.rviz"
 DEFAULT_ROS2_CONTROLLERS_RELATIVE_PATH = "config/controllers.yaml"
 
-DEFAULT_MOVEIT_PACKAGE = "so100_moveit"
+DEFAULT_MOVEIT_PACKAGE = "so100_moveit_config"
 DEFAULT_ROBOT_NAME = "so100"
 DEFAULT_MOVEIT_CONTROLLERS_RELATIVE_PATH = "config/moveit_controllers.yaml"
 
@@ -161,7 +161,7 @@ def launch_setup(context, *args, **kwargs):
   #moveit_parameters["robot_description"] = urdf_param["robot_description"]
   # Controller
   moveit_controllers = os.path.join(
-    moveit_package,
+    "so100_moveit_config",
     "config",
     "moveit_controllers.yaml"
   )

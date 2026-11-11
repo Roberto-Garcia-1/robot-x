@@ -5,21 +5,6 @@ moveit_setup_assistant_config:
   srdf:
     relative_path: config/dofbot.srdf
   package_settings:
-    author_name: ""
-    author_email: ""
-    generated_timestamp: 1782429559
-  control_xacro:
-    command:
-      - position
-    state:
-      - position
-      - velocity
-  modified_urdf:
-    xacros:
-      - control_xacro
-  control_xacro:
-    command:
-      - position
-    state:
-      - position
-      - velocity
+    author_name: a
+    author_email: a@a.com
+    generated_timestamp: 1794361268

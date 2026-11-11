@@ -31,23 +31,22 @@
         <joint name="joint5" value="0"/>
     </group_state>
     <group_state name="CubeReady" group="arm">
-        <joint name="joint1" value="0.0"/>
-        <joint name="joint2" value="0.7405848819574384"/>
-        <joint name="joint3" value="0.7343318459040101"/>
-        <joint name="joint4" value="0.9732923123660987"/>
+        <joint name="joint1" value="0"/>
+        <joint name="joint2" value="0.740585"/>
+        <joint name="joint3" value="0.734332"/>
+        <joint name="joint4" value="0.973292"/>
         <joint name="joint5" value="0"/>
     </group_state>
     <group_state name="Opened" group="gripper">
-        <joint name="joint5a1" value="0.0"/>
+        <joint name="joint5a1" value="0"/>
     </group_state>
     <group_state name="Closed" group="gripper">
-        <joint name="joint5a1" value="0.9636074008557405"/>
+        <joint name="joint5a1" value="0.963607"/>
     </group_state>
     <!--END EFFECTOR: Purpose: Represent information about an end effector.-->
     <end_effector name="gripper" parent_link="link5" group="gripper"/>
     <!--VIRTUAL JOINT: Purpose: this element defines a virtual joint between a robot link and an external frame of reference (considered fixed with respect to the robot)-->
     <virtual_joint name="virtual_joint" type="fixed" parent_frame="world" child_link="base_link"/>
-    <!--PASSIVE JOINT: Purpose: this element is used to mark joints that are not actuated-->
     <!--DISABLE COLLISIONS: By default it is assumed that any link of the robot could potentially come into collision with any other link in the robot. This tag disables collision checking between a specified pair of links. -->
     <disable_collisions link1="base_link" link2="link1" reason="Adjacent"/>
     <disable_collisions link1="base_link" link2="link3" reason="Never"/>
@@ -93,7 +92,6 @@
     <disable_collisions link1="link5a1" link2="link5b1" reason="Default"/>
     <disable_collisions link1="link5a1" link2="link5b2" reason="Default"/>
     <disable_collisions link1="link5a1" link2="link5b3" reason="Never"/>
-    <disable_collisions link1="link5a2" link2="link5a3" reason="Default"/>
     <disable_collisions link1="link5a2" link2="link5a3" reason="Default"/>
     <disable_collisions link1="link5a2" link2="link5b1" reason="Default"/>
     <disable_collisions link1="link5a2" link2="link5b2" reason="Default"/>
